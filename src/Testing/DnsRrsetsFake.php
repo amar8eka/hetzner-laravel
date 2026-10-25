@@ -3,12 +3,24 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\DnsRrsets\AddRecordsRequest;
+use Boci\HetznerLaravel\Requests\DnsRrsets\ChangeProtectionRequest;
+use Boci\HetznerLaravel\Requests\DnsRrsets\ChangeTtlRequest;
+use Boci\HetznerLaravel\Requests\DnsRrsets\CreateRequest;
+use Boci\HetznerLaravel\Requests\DnsRrsets\DeleteRequest;
+use Boci\HetznerLaravel\Requests\DnsRrsets\GetRequest;
+use Boci\HetznerLaravel\Requests\DnsRrsets\ListRequest;
+use Boci\HetznerLaravel\Requests\DnsRrsets\RemoveRecordsRequest;
+use Boci\HetznerLaravel\Requests\DnsRrsets\SetRecordsRequest;
+use Boci\HetznerLaravel\Requests\DnsRrsets\UpdateRecordsRequest;
+use Boci\HetznerLaravel\Requests\DnsRrsets\UpdateRequest;
 use Boci\HetznerLaravel\Responses\DnsRrsets\ActionResponse;
 use Boci\HetznerLaravel\Responses\DnsRrsets\CreateResponse;
 use Boci\HetznerLaravel\Responses\DnsRrsets\DeleteResponse;
 use Boci\HetznerLaravel\Responses\DnsRrsets\GetResponse;
 use Boci\HetznerLaravel\Responses\DnsRrsets\ListResponse;
 use Boci\HetznerLaravel\Responses\DnsRrsets\UpdateResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -55,7 +67,7 @@ final class DnsRrsetsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsRrsets\ListRequest($zoneIdOrName, $parameters));
+            return ListResponse::from($response, new ListRequest($zoneIdOrName, $parameters));
         }
 
         return ListResponse::fake(array_merge(['zoneIdOrName' => $zoneIdOrName], $parameters));
@@ -84,7 +96,7 @@ final class DnsRrsetsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return CreateResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsRrsets\CreateRequest($zoneIdOrName, $parameters));
+            return CreateResponse::from($response, new CreateRequest($zoneIdOrName, $parameters));
         }
 
         return CreateResponse::fake(array_merge(['zoneIdOrName' => $zoneIdOrName], $parameters));
@@ -114,7 +126,7 @@ final class DnsRrsetsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return GetResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsRrsets\GetRequest($zoneIdOrName, $rrName, $rrType));
+            return GetResponse::from($response, new GetRequest($zoneIdOrName, $rrName, $rrType));
         }
 
         return GetResponse::fake(['zoneIdOrName' => $zoneIdOrName, 'rrName' => $rrName, 'rrType' => $rrType]);
@@ -145,7 +157,7 @@ final class DnsRrsetsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return UpdateResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsRrsets\UpdateRequest($zoneIdOrName, $rrName, $rrType, $parameters));
+            return UpdateResponse::from($response, new UpdateRequest($zoneIdOrName, $rrName, $rrType, $parameters));
         }
 
         return UpdateResponse::fake(array_merge(['zoneIdOrName' => $zoneIdOrName, 'rrName' => $rrName, 'rrType' => $rrType], $parameters));
@@ -175,7 +187,7 @@ final class DnsRrsetsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return DeleteResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsRrsets\DeleteRequest($zoneIdOrName, $rrName, $rrType));
+            return DeleteResponse::from($response, new DeleteRequest($zoneIdOrName, $rrName, $rrType));
         }
 
         return DeleteResponse::fake(['zoneIdOrName' => $zoneIdOrName, 'rrName' => $rrName, 'rrType' => $rrType]);
@@ -206,7 +218,7 @@ final class DnsRrsetsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsRrsets\ChangeProtectionRequest($zoneIdOrName, $rrName, $rrType, $parameters));
+            return ActionResponse::from($response, new ChangeProtectionRequest($zoneIdOrName, $rrName, $rrType, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['zoneIdOrName' => $zoneIdOrName, 'command' => 'change_protection'], $parameters));
@@ -237,7 +249,7 @@ final class DnsRrsetsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsRrsets\ChangeTtlRequest($zoneIdOrName, $rrName, $rrType, $parameters));
+            return ActionResponse::from($response, new ChangeTtlRequest($zoneIdOrName, $rrName, $rrType, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['zoneIdOrName' => $zoneIdOrName, 'command' => 'change_ttl'], $parameters));
@@ -268,7 +280,7 @@ final class DnsRrsetsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsRrsets\SetRecordsRequest($zoneIdOrName, $rrName, $rrType, $parameters));
+            return ActionResponse::from($response, new SetRecordsRequest($zoneIdOrName, $rrName, $rrType, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['zoneIdOrName' => $zoneIdOrName, 'command' => 'set_rrset_records'], $parameters));
@@ -299,7 +311,7 @@ final class DnsRrsetsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsRrsets\AddRecordsRequest($zoneIdOrName, $rrName, $rrType, $parameters));
+            return ActionResponse::from($response, new AddRecordsRequest($zoneIdOrName, $rrName, $rrType, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['zoneIdOrName' => $zoneIdOrName, 'command' => 'add_rrset_records'], $parameters));
@@ -330,7 +342,7 @@ final class DnsRrsetsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsRrsets\UpdateRecordsRequest($zoneIdOrName, $rrName, $rrType, $parameters));
+            return ActionResponse::from($response, new UpdateRecordsRequest($zoneIdOrName, $rrName, $rrType, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['zoneIdOrName' => $zoneIdOrName, 'command' => 'update_rrset_records'], $parameters));
@@ -361,7 +373,7 @@ final class DnsRrsetsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsRrsets\RemoveRecordsRequest($zoneIdOrName, $rrName, $rrType, $parameters));
+            return ActionResponse::from($response, new RemoveRecordsRequest($zoneIdOrName, $rrName, $rrType, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['zoneIdOrName' => $zoneIdOrName, 'command' => 'remove_rrset_records'], $parameters));
@@ -379,7 +391,7 @@ final class DnsRrsetsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to dns_rrsets.');
+            throw new AssertionFailedError('No requests were sent to dns_rrsets.');
         }
     }
 
@@ -391,7 +403,7 @@ final class DnsRrsetsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'dns_rrsets');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to dns_rrsets.');
+            throw new AssertionFailedError('Requests were sent to dns_rrsets.');
         }
     }
 }

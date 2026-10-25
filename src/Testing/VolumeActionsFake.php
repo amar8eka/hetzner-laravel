@@ -3,8 +3,15 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\VolumeActions\AttachRequest;
+use Boci\HetznerLaravel\Requests\VolumeActions\ChangeProtectionRequest;
+use Boci\HetznerLaravel\Requests\VolumeActions\DetachRequest;
+use Boci\HetznerLaravel\Requests\VolumeActions\GetActionRequest;
+use Boci\HetznerLaravel\Requests\VolumeActions\ListActionsRequest;
+use Boci\HetznerLaravel\Requests\VolumeActions\ResizeRequest;
 use Boci\HetznerLaravel\Responses\VolumeActions\ActionResponse;
 use Boci\HetznerLaravel\Responses\VolumeActions\ListActionsResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -51,7 +58,7 @@ final class VolumeActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListActionsResponse::from($response, new \Boci\HetznerLaravel\Requests\VolumeActions\ListActionsRequest($volumeId, $parameters));
+            return ListActionsResponse::from($response, new ListActionsRequest($volumeId, $parameters));
         }
 
         return ListActionsResponse::fake(array_merge(['volumeId' => $volumeId], $parameters));
@@ -80,7 +87,7 @@ final class VolumeActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\VolumeActions\GetActionRequest($volumeId, $actionId));
+            return ActionResponse::from($response, new GetActionRequest($volumeId, $actionId));
         }
 
         return ActionResponse::fake(['volumeId' => $volumeId, 'actionId' => $actionId]);
@@ -109,7 +116,7 @@ final class VolumeActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\VolumeActions\AttachRequest($volumeId, $parameters));
+            return ActionResponse::from($response, new AttachRequest($volumeId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['volumeId' => $volumeId, 'command' => 'attach_volume'], $parameters));
@@ -137,7 +144,7 @@ final class VolumeActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\VolumeActions\DetachRequest($volumeId));
+            return ActionResponse::from($response, new DetachRequest($volumeId));
         }
 
         return ActionResponse::fake(['volumeId' => $volumeId, 'command' => 'detach_volume']);
@@ -166,7 +173,7 @@ final class VolumeActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\VolumeActions\ResizeRequest($volumeId, $parameters));
+            return ActionResponse::from($response, new ResizeRequest($volumeId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['volumeId' => $volumeId, 'command' => 'resize_volume'], $parameters));
@@ -195,7 +202,7 @@ final class VolumeActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\VolumeActions\ChangeProtectionRequest($volumeId, $parameters));
+            return ActionResponse::from($response, new ChangeProtectionRequest($volumeId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['volumeId' => $volumeId, 'command' => 'change_protection'], $parameters));
@@ -213,7 +220,7 @@ final class VolumeActionsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to volume_actions.');
+            throw new AssertionFailedError('No requests were sent to volume_actions.');
         }
     }
 
@@ -225,7 +232,7 @@ final class VolumeActionsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'volume_actions');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to volume_actions.');
+            throw new AssertionFailedError('Requests were sent to volume_actions.');
         }
     }
 }

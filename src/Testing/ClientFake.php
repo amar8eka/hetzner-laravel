@@ -3,6 +3,7 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Client;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -201,7 +202,7 @@ final class ClientFake
         }
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError("No requests were sent to {$resource}.");
+            throw new AssertionFailedError("No requests were sent to {$resource}.");
         }
     }
 
@@ -215,7 +216,7 @@ final class ClientFake
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === $resource);
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError("Requests were sent to {$resource}.");
+            throw new AssertionFailedError("Requests were sent to {$resource}.");
         }
     }
 
@@ -225,7 +226,7 @@ final class ClientFake
     public function assertNothingSent(): void
     {
         if (! empty($this->requests)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent.');
+            throw new AssertionFailedError('Requests were sent.');
         }
     }
 
@@ -240,7 +241,7 @@ final class ClientFake
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === $resource);
 
         if (count($sent) !== $times) {
-            throw new \PHPUnit\Framework\AssertionFailedError("Expected {$times} requests to {$resource}, but {$count} were sent.");
+            throw new AssertionFailedError("Expected {$times} requests to {$resource}, but {$count} were sent.");
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Boci\HetznerLaravel\Responses\Certificates;
 
+use Boci\HetznerLaravel\Meta\MetaInformation;
 use Boci\HetznerLaravel\Responses\Response;
 
 /**
@@ -43,7 +44,7 @@ final class CreateResponse extends Response
             ],
         ];
 
-        $meta = new \Boci\HetznerLaravel\Meta\MetaInformation;
+        $meta = new MetaInformation;
 
         return new self($data, $meta);
     }

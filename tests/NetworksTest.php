@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Boci\HetznerLaravel\Resources\Networks;
 use Boci\HetznerLaravel\Responses\NetworkActions\ActionResponse;
 use Boci\HetznerLaravel\Responses\NetworkActions\ListActionsResponse;
 use Boci\HetznerLaravel\Responses\Networks\CreateResponse;
@@ -13,9 +14,14 @@ use Boci\HetznerLaravel\Responses\Networks\MembersResponse;
 use Boci\HetznerLaravel\Responses\Networks\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\Networks\UpdateResponse;
 use Boci\HetznerLaravel\Testing\TestCase;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Networks Test Suite
@@ -53,12 +59,12 @@ final class NetworksTest extends TestCase
     public function test_network_members_sends_repeated_filters(): void
     {
         $history = [];
-        $stack = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+        $stack = HandlerStack::create(new MockHandler([
             new Response(200, [], (string) json_encode(['members' => [], 'meta' => ['pagination' => ['total_entries' => 0]]])),
         ]));
-        $stack->push(\GuzzleHttp\Middleware::history($history));
+        $stack->push(Middleware::history($history));
 
-        $networks = new \Boci\HetznerLaravel\Resources\Networks(new \GuzzleHttp\Client(['handler' => $stack]));
+        $networks = new Networks(new Client(['handler' => $stack]));
 
         $response = $networks->members('123', ['type' => ['server', 'load_balancer'], 'status' => 'ok']);
 
@@ -629,7 +635,7 @@ final class NetworksTest extends TestCase
         $networksFake->list();
 
         // Now it should fail
-        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('Requests were sent to networks.');
         $networksFake->assertNotSent();
     }

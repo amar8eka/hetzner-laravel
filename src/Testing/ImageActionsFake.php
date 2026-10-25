@@ -3,8 +3,12 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\ImageActions\ChangeProtectionRequest;
+use Boci\HetznerLaravel\Requests\ImageActions\GetActionRequest;
+use Boci\HetznerLaravel\Requests\ImageActions\ListActionsRequest;
 use Boci\HetznerLaravel\Responses\ImageActions\ActionResponse;
 use Boci\HetznerLaravel\Responses\ImageActions\ListActionsResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -51,7 +55,7 @@ final class ImageActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListActionsResponse::from($response, new \Boci\HetznerLaravel\Requests\ImageActions\ListActionsRequest($imageId, $parameters));
+            return ListActionsResponse::from($response, new ListActionsRequest($imageId, $parameters));
         }
 
         return ListActionsResponse::fake(array_merge(['imageId' => $imageId], $parameters));
@@ -80,7 +84,7 @@ final class ImageActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ImageActions\GetActionRequest($imageId, $actionId));
+            return ActionResponse::from($response, new GetActionRequest($imageId, $actionId));
         }
 
         return ActionResponse::fake(['imageId' => $imageId, 'actionId' => $actionId, 'command' => 'get']);
@@ -109,7 +113,7 @@ final class ImageActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ImageActions\ChangeProtectionRequest($imageId, $parameters));
+            return ActionResponse::from($response, new ChangeProtectionRequest($imageId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['imageId' => $imageId, 'command' => 'change_protection'], $parameters));
@@ -127,7 +131,7 @@ final class ImageActionsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to image_actions.');
+            throw new AssertionFailedError('No requests were sent to image_actions.');
         }
     }
 
@@ -139,7 +143,7 @@ final class ImageActionsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'image_actions');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to image_actions.');
+            throw new AssertionFailedError('Requests were sent to image_actions.');
         }
     }
 }

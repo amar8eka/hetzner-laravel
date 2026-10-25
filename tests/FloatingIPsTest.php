@@ -16,6 +16,7 @@ use Boci\HetznerLaravel\Testing\TestCase;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Floating IPs Test Suite
@@ -629,7 +630,7 @@ final class FloatingIPsTest extends TestCase
         $floatingIPsFake->list();
 
         // Now it should fail
-        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('Requests were sent to floating_ips.');
         $floatingIPsFake->assertNotSent();
     }

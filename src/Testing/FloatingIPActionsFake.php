@@ -3,8 +3,15 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\FloatingIPActions\AssignRequest;
+use Boci\HetznerLaravel\Requests\FloatingIPActions\ChangeProtectionRequest;
+use Boci\HetznerLaravel\Requests\FloatingIPActions\ChangeReverseDnsRequest;
+use Boci\HetznerLaravel\Requests\FloatingIPActions\GetActionRequest;
+use Boci\HetznerLaravel\Requests\FloatingIPActions\ListActionsRequest;
+use Boci\HetznerLaravel\Requests\FloatingIPActions\UnassignRequest;
 use Boci\HetznerLaravel\Responses\FloatingIPActions\ActionResponse;
 use Boci\HetznerLaravel\Responses\FloatingIPActions\ListActionsResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -51,7 +58,7 @@ final class FloatingIPActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListActionsResponse::from($response, new \Boci\HetznerLaravel\Requests\FloatingIPActions\ListActionsRequest($floatingIpId, $parameters));
+            return ListActionsResponse::from($response, new ListActionsRequest($floatingIpId, $parameters));
         }
 
         return ListActionsResponse::fake(array_merge(['floatingIpId' => $floatingIpId], $parameters));
@@ -80,7 +87,7 @@ final class FloatingIPActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\FloatingIPActions\GetActionRequest($floatingIpId, $actionId));
+            return ActionResponse::from($response, new GetActionRequest($floatingIpId, $actionId));
         }
 
         return ActionResponse::fake(['floatingIpId' => $floatingIpId, 'actionId' => $actionId]);
@@ -109,7 +116,7 @@ final class FloatingIPActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\FloatingIPActions\AssignRequest($floatingIpId, $parameters));
+            return ActionResponse::from($response, new AssignRequest($floatingIpId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['floatingIpId' => $floatingIpId, 'command' => 'assign_floating_ip'], $parameters));
@@ -137,7 +144,7 @@ final class FloatingIPActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\FloatingIPActions\UnassignRequest($floatingIpId));
+            return ActionResponse::from($response, new UnassignRequest($floatingIpId));
         }
 
         return ActionResponse::fake(['floatingIpId' => $floatingIpId, 'command' => 'unassign_floating_ip']);
@@ -166,7 +173,7 @@ final class FloatingIPActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\FloatingIPActions\ChangeReverseDnsRequest($floatingIpId, $parameters));
+            return ActionResponse::from($response, new ChangeReverseDnsRequest($floatingIpId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['floatingIpId' => $floatingIpId, 'command' => 'change_reverse_dns'], $parameters));
@@ -195,7 +202,7 @@ final class FloatingIPActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\FloatingIPActions\ChangeProtectionRequest($floatingIpId, $parameters));
+            return ActionResponse::from($response, new ChangeProtectionRequest($floatingIpId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['floatingIpId' => $floatingIpId, 'command' => 'change_protection'], $parameters));
@@ -213,7 +220,7 @@ final class FloatingIPActionsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to floating_ip_actions.');
+            throw new AssertionFailedError('No requests were sent to floating_ip_actions.');
         }
     }
 
@@ -225,7 +232,7 @@ final class FloatingIPActionsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'floating_ip_actions');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to floating_ip_actions.');
+            throw new AssertionFailedError('Requests were sent to floating_ip_actions.');
         }
     }
 }

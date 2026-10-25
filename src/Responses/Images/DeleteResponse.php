@@ -2,7 +2,9 @@
 
 namespace Boci\HetznerLaravel\Responses\Images;
 
+use Boci\HetznerLaravel\Meta\MetaInformation;
 use Boci\HetznerLaravel\Responses\Response;
+use Boci\HetznerLaravel\Responses\ServerActions\Action;
 
 /**
  * Delete Image Response
@@ -15,9 +17,9 @@ final class DeleteResponse extends Response
     /**
      * Get the action from the response.
      */
-    public function action(): \Boci\HetznerLaravel\Responses\ServerActions\Action
+    public function action(): Action
     {
-        return new \Boci\HetznerLaravel\Responses\ServerActions\Action($this->data['action']);
+        return new Action($this->data['action']);
     }
 
     /**
@@ -44,7 +46,7 @@ final class DeleteResponse extends Response
                 'error' => null,
             ],
         ];
-        $meta = new \Boci\HetznerLaravel\Meta\MetaInformation;
+        $meta = new MetaInformation;
 
         return new self($data, $meta);
     }

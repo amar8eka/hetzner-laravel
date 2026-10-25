@@ -14,6 +14,7 @@ use Boci\HetznerLaravel\Testing\TestCase;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * SSH Keys Test Suite
@@ -491,7 +492,7 @@ final class SshKeysTest extends TestCase
         $sshKeysFake->list();
 
         // Now it should fail
-        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('Requests were sent to ssh_keys.');
         $sshKeysFake->assertNotSent();
     }

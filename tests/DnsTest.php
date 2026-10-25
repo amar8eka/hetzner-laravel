@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Boci\HetznerLaravel\Requests\DnsRrsets\UpdateRecordsRequest;
 use Boci\HetznerLaravel\Responses\DnsRrsets\ActionResponse as RRSetActionResponse;
 use Boci\HetznerLaravel\Responses\DnsRrsets\CreateResponse as RRSetCreateResponse;
 use Boci\HetznerLaravel\Responses\DnsRrsets\DeleteResponse as RRSetDeleteResponse;
@@ -11,6 +12,7 @@ use Boci\HetznerLaravel\Responses\DnsRrsets\GetResponse as RRSetGetResponse;
 use Boci\HetznerLaravel\Responses\DnsRrsets\ListResponse as RRSetListResponse;
 use Boci\HetznerLaravel\Responses\DnsRrsets\RRSet;
 use Boci\HetznerLaravel\Responses\DnsRrsets\UpdateResponse as RRSetUpdateResponse;
+use Boci\HetznerLaravel\Responses\DnsZoneActions\Action;
 use Boci\HetznerLaravel\Responses\DnsZoneActions\ActionResponse;
 use Boci\HetznerLaravel\Responses\DnsZoneActions\ListActionsResponse;
 use Boci\HetznerLaravel\Responses\DnsZones\CreateResponse;
@@ -25,6 +27,7 @@ use Boci\HetznerLaravel\Testing\TestCase;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * DNS Test Suite
@@ -612,7 +615,7 @@ $TTL 3600
         $dnsZonesFake->list();
 
         // Now it should fail
-        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('Requests were sent to dns_zones.');
         $dnsZonesFake->assertNotSent();
     }
@@ -843,13 +846,13 @@ $TTL 3600
         $this->assertCount(2, $response->actions());
 
         $actions = $response->actions();
-        $this->assertInstanceOf(\Boci\HetznerLaravel\Responses\DnsZoneActions\Action::class, $actions[0]);
+        $this->assertInstanceOf(Action::class, $actions[0]);
         $this->assertEquals(1, $actions[0]->id());
         $this->assertEquals('change_nameservers', $actions[0]->command());
         $this->assertEquals('success', $actions[0]->status());
         $this->assertEquals(100, $actions[0]->progress());
 
-        $this->assertInstanceOf(\Boci\HetznerLaravel\Responses\DnsZoneActions\Action::class, $actions[1]);
+        $this->assertInstanceOf(Action::class, $actions[1]);
         $this->assertEquals(2, $actions[1]->id());
         $this->assertEquals('change_protection', $actions[1]->command());
         $this->assertEquals('running', $actions[1]->status());
@@ -872,7 +875,7 @@ $TTL 3600
         $response = $client->dnsZones()->actions()->retrieve($zoneIdOrName, $actionId);
 
         $this->assertInstanceOf(ActionResponse::class, $response);
-        $this->assertInstanceOf(\Boci\HetznerLaravel\Responses\DnsZoneActions\Action::class, $response->action());
+        $this->assertInstanceOf(Action::class, $response->action());
 
         $action = $response->action();
         $this->assertEquals(123, $action->id());
@@ -1324,7 +1327,7 @@ $TTL 3600
             return $request['parameters']['records'][0]['comment'] === 'Primary web server';
         });
 
-        $request = new \Boci\HetznerLaravel\Requests\DnsRrsets\UpdateRecordsRequest('example.com', '@', 'A', $parameters);
+        $request = new UpdateRecordsRequest('example.com', '@', 'A', $parameters);
         $this->assertSame('POST', $request->method());
         $this->assertSame('/v1/zones/example.com/rrsets/@/A/actions/update_records', $request->uri());
     }

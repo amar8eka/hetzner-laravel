@@ -3,8 +3,15 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\Images\DeleteRequest;
+use Boci\HetznerLaravel\Requests\Images\ListRequest;
+use Boci\HetznerLaravel\Requests\Images\RetrieveRequest;
+use Boci\HetznerLaravel\Requests\Images\UpdateRequest;
+use Boci\HetznerLaravel\Responses\Images\DeleteResponse;
 use Boci\HetznerLaravel\Responses\Images\ListResponse;
 use Boci\HetznerLaravel\Responses\Images\RetrieveResponse;
+use Boci\HetznerLaravel\Responses\Images\UpdateResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -50,7 +57,7 @@ final class ImagesFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListResponse::from($response, new \Boci\HetznerLaravel\Requests\Images\ListRequest($parameters));
+            return ListResponse::from($response, new ListRequest($parameters));
         }
 
         return ListResponse::fake($parameters);
@@ -78,7 +85,7 @@ final class ImagesFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return RetrieveResponse::from($response, new \Boci\HetznerLaravel\Requests\Images\RetrieveRequest($imageId));
+            return RetrieveResponse::from($response, new RetrieveRequest($imageId));
         }
 
         return RetrieveResponse::fake(['imageId' => $imageId]);
@@ -92,7 +99,7 @@ final class ImagesFake implements ResourceContract
      *
      * @throws Throwable When a mock exception is provided
      */
-    public function update(string $imageId, array $parameters): \Boci\HetznerLaravel\Responses\Images\UpdateResponse
+    public function update(string $imageId, array $parameters): UpdateResponse
     {
         $this->requests[] = [
             'resource' => 'images',
@@ -107,10 +114,10 @@ final class ImagesFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return \Boci\HetznerLaravel\Responses\Images\UpdateResponse::from($response, new \Boci\HetznerLaravel\Requests\Images\UpdateRequest($imageId, $parameters));
+            return UpdateResponse::from($response, new UpdateRequest($imageId, $parameters));
         }
 
-        return \Boci\HetznerLaravel\Responses\Images\UpdateResponse::fake(array_merge(['imageId' => $imageId], $parameters));
+        return UpdateResponse::fake(array_merge(['imageId' => $imageId], $parameters));
     }
 
     /**
@@ -120,7 +127,7 @@ final class ImagesFake implements ResourceContract
      *
      * @throws Throwable When a mock exception is provided
      */
-    public function delete(string $imageId): \Boci\HetznerLaravel\Responses\Images\DeleteResponse
+    public function delete(string $imageId): DeleteResponse
     {
         $this->requests[] = [
             'resource' => 'images',
@@ -135,18 +142,18 @@ final class ImagesFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return \Boci\HetznerLaravel\Responses\Images\DeleteResponse::from($response, new \Boci\HetznerLaravel\Requests\Images\DeleteRequest($imageId));
+            return DeleteResponse::from($response, new DeleteRequest($imageId));
         }
 
-        return \Boci\HetznerLaravel\Responses\Images\DeleteResponse::fake(['imageId' => $imageId]);
+        return DeleteResponse::fake(['imageId' => $imageId]);
     }
 
     /**
      * Get access to Image actions (fake implementation).
      */
-    public function actions(): \Boci\HetznerLaravel\Testing\ImageActionsFake
+    public function actions(): ImageActionsFake
     {
-        return new \Boci\HetznerLaravel\Testing\ImageActionsFake($this->responses, $this->requests);
+        return new ImageActionsFake($this->responses, $this->requests);
     }
 
     /**
@@ -161,7 +168,7 @@ final class ImagesFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to images.');
+            throw new AssertionFailedError('No requests were sent to images.');
         }
     }
 
@@ -173,7 +180,7 @@ final class ImagesFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'images');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to images.');
+            throw new AssertionFailedError('Requests were sent to images.');
         }
     }
 }

@@ -3,6 +3,21 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\AddServiceRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\AddTargetRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\AttachToNetworkRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\ChangeAlgorithmRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\ChangeProtectionRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\ChangeReverseDnsRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\ChangeTypeRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\DeleteServiceRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\DetachFromNetworkRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\DisablePublicInterfaceRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\EnablePublicInterfaceRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\GetActionRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\ListActionsRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\RemoveTargetRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancerActions\UpdateServiceRequest;
 use Boci\HetznerLaravel\Responses\LoadBalancerActions\ActionResponse;
 use Boci\HetznerLaravel\Responses\LoadBalancerActions\ListActionsResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -51,7 +66,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListActionsResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\ListActionsRequest($loadBalancerId, $parameters));
+            return ListActionsResponse::from($response, new ListActionsRequest($loadBalancerId, $parameters));
         }
 
         return ListActionsResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters));
@@ -80,7 +95,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\GetActionRequest($loadBalancerId, $actionId));
+            return ActionResponse::from($response, new GetActionRequest($loadBalancerId, $actionId));
         }
 
         return ActionResponse::fake(['loadBalancerId' => $loadBalancerId, 'actionId' => $actionId, 'command' => 'get_action']);
@@ -109,7 +124,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\AddServiceRequest($loadBalancerId, $parameters));
+            return ActionResponse::from($response, new AddServiceRequest($loadBalancerId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters, ['command' => 'add_service']));
@@ -138,7 +153,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\UpdateServiceRequest($loadBalancerId, $parameters));
+            return ActionResponse::from($response, new UpdateServiceRequest($loadBalancerId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters, ['command' => 'update_service']));
@@ -167,7 +182,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\DeleteServiceRequest($loadBalancerId, $parameters));
+            return ActionResponse::from($response, new DeleteServiceRequest($loadBalancerId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters, ['command' => 'delete_service']));
@@ -196,7 +211,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\AddTargetRequest($loadBalancerId, $parameters));
+            return ActionResponse::from($response, new AddTargetRequest($loadBalancerId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters, ['command' => 'add_target']));
@@ -225,7 +240,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\RemoveTargetRequest($loadBalancerId, $parameters));
+            return ActionResponse::from($response, new RemoveTargetRequest($loadBalancerId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters, ['command' => 'remove_target']));
@@ -254,7 +269,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\ChangeAlgorithmRequest($loadBalancerId, $parameters));
+            return ActionResponse::from($response, new ChangeAlgorithmRequest($loadBalancerId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters, ['command' => 'change_algorithm']));
@@ -283,7 +298,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\ChangeReverseDnsRequest($loadBalancerId, $parameters));
+            return ActionResponse::from($response, new ChangeReverseDnsRequest($loadBalancerId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters, ['command' => 'change_reverse_dns']));
@@ -312,7 +327,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\ChangeProtectionRequest($loadBalancerId, $parameters));
+            return ActionResponse::from($response, new ChangeProtectionRequest($loadBalancerId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters, ['command' => 'change_protection']));
@@ -341,7 +356,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\ChangeTypeRequest($loadBalancerId, $parameters));
+            return ActionResponse::from($response, new ChangeTypeRequest($loadBalancerId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters, ['command' => 'change_type']));
@@ -370,7 +385,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\AttachToNetworkRequest($loadBalancerId, $parameters));
+            return ActionResponse::from($response, new AttachToNetworkRequest($loadBalancerId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters, ['command' => 'attach_to_network']));
@@ -399,7 +414,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\DetachFromNetworkRequest($loadBalancerId, $parameters));
+            return ActionResponse::from($response, new DetachFromNetworkRequest($loadBalancerId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters, ['command' => 'detach_from_network']));
@@ -427,7 +442,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\EnablePublicInterfaceRequest($loadBalancerId));
+            return ActionResponse::from($response, new EnablePublicInterfaceRequest($loadBalancerId));
         }
 
         return ActionResponse::fake(['loadBalancerId' => $loadBalancerId, 'command' => 'enable_public_interface']);
@@ -455,7 +470,7 @@ final class LoadBalancerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancerActions\DisablePublicInterfaceRequest($loadBalancerId));
+            return ActionResponse::from($response, new DisablePublicInterfaceRequest($loadBalancerId));
         }
 
         return ActionResponse::fake(['loadBalancerId' => $loadBalancerId, 'command' => 'disable_public_interface']);

@@ -3,6 +3,8 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\Locations\ListRequest;
+use Boci\HetznerLaravel\Requests\Locations\RetrieveRequest;
 use Boci\HetznerLaravel\Responses\Locations\ListResponse;
 use Boci\HetznerLaravel\Responses\Locations\RetrieveResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -50,7 +52,7 @@ final class LocationsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListResponse::from($response, new \Boci\HetznerLaravel\Requests\Locations\ListRequest($parameters));
+            return ListResponse::from($response, new ListRequest($parameters));
         }
 
         return ListResponse::fake($parameters);
@@ -78,7 +80,7 @@ final class LocationsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return RetrieveResponse::from($response, new \Boci\HetznerLaravel\Requests\Locations\RetrieveRequest($locationId));
+            return RetrieveResponse::from($response, new RetrieveRequest($locationId));
         }
 
         return RetrieveResponse::fake(['locationId' => $locationId]);

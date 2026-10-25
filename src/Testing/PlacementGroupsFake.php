@@ -3,11 +3,17 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\PlacementGroups\CreateRequest;
+use Boci\HetznerLaravel\Requests\PlacementGroups\DeleteRequest;
+use Boci\HetznerLaravel\Requests\PlacementGroups\ListRequest;
+use Boci\HetznerLaravel\Requests\PlacementGroups\RetrieveRequest;
+use Boci\HetznerLaravel\Requests\PlacementGroups\UpdateRequest;
 use Boci\HetznerLaravel\Responses\PlacementGroups\CreateResponse;
 use Boci\HetznerLaravel\Responses\PlacementGroups\DeleteResponse;
 use Boci\HetznerLaravel\Responses\PlacementGroups\ListResponse;
 use Boci\HetznerLaravel\Responses\PlacementGroups\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\PlacementGroups\UpdateResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -53,7 +59,7 @@ final class PlacementGroupsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return CreateResponse::from($response, new \Boci\HetznerLaravel\Requests\PlacementGroups\CreateRequest($parameters));
+            return CreateResponse::from($response, new CreateRequest($parameters));
         }
 
         return CreateResponse::fake($parameters);
@@ -81,7 +87,7 @@ final class PlacementGroupsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListResponse::from($response, new \Boci\HetznerLaravel\Requests\PlacementGroups\ListRequest($parameters));
+            return ListResponse::from($response, new ListRequest($parameters));
         }
 
         return ListResponse::fake($parameters);
@@ -109,7 +115,7 @@ final class PlacementGroupsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return RetrieveResponse::from($response, new \Boci\HetznerLaravel\Requests\PlacementGroups\RetrieveRequest($placementGroupId));
+            return RetrieveResponse::from($response, new RetrieveRequest($placementGroupId));
         }
 
         return RetrieveResponse::fake(['placementGroupId' => $placementGroupId]);
@@ -138,7 +144,7 @@ final class PlacementGroupsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return UpdateResponse::from($response, new \Boci\HetznerLaravel\Requests\PlacementGroups\UpdateRequest($placementGroupId, $parameters));
+            return UpdateResponse::from($response, new UpdateRequest($placementGroupId, $parameters));
         }
 
         return UpdateResponse::fake(array_merge(['placementGroupId' => $placementGroupId], $parameters));
@@ -166,7 +172,7 @@ final class PlacementGroupsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return DeleteResponse::from($response, new \Boci\HetznerLaravel\Requests\PlacementGroups\DeleteRequest($placementGroupId));
+            return DeleteResponse::from($response, new DeleteRequest($placementGroupId));
         }
 
         return DeleteResponse::fake(['placementGroupId' => $placementGroupId]);
@@ -184,7 +190,7 @@ final class PlacementGroupsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to placement_groups.');
+            throw new AssertionFailedError('No requests were sent to placement_groups.');
         }
     }
 
@@ -196,7 +202,7 @@ final class PlacementGroupsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'placement_groups');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to placement_groups.');
+            throw new AssertionFailedError('Requests were sent to placement_groups.');
         }
     }
 }

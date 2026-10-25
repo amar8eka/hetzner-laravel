@@ -2,6 +2,15 @@
 
 namespace Tests;
 
+use Boci\HetznerLaravel\Responses\ServerActions\ActionResponse;
+use Boci\HetznerLaravel\Responses\ServerActions\ConsoleResponse;
+use Boci\HetznerLaravel\Responses\ServerActions\ListActionsResponse;
+use Boci\HetznerLaravel\Responses\Servers\CreateResponse;
+use Boci\HetznerLaravel\Responses\Servers\DeleteResponse;
+use Boci\HetznerLaravel\Responses\Servers\ListResponse;
+use Boci\HetznerLaravel\Responses\Servers\MetricsResponse;
+use Boci\HetznerLaravel\Responses\Servers\RetrieveResponse;
+use Boci\HetznerLaravel\Responses\Servers\UpdateResponse;
 use Boci\HetznerLaravel\Testing\TestCase;
 use Exception;
 use GuzzleHttp\Psr7\Response;
@@ -31,7 +40,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Servers\CreateResponse::class,
+            CreateResponse::class,
             $response
         );
 
@@ -118,7 +127,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->list();
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Servers\ListResponse::class,
+            ListResponse::class,
             $response
         );
 
@@ -219,7 +228,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Servers\ListResponse::class,
+            ListResponse::class,
             $response
         );
 
@@ -243,7 +252,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->retrieve('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Servers\RetrieveResponse::class,
+            RetrieveResponse::class,
             $response
         );
 
@@ -329,7 +338,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Servers\UpdateResponse::class,
+            UpdateResponse::class,
             $response
         );
 
@@ -352,7 +361,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->delete('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Servers\DeleteResponse::class,
+            DeleteResponse::class,
             $response
         );
 
@@ -373,7 +382,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->metrics('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Servers\MetricsResponse::class,
+            MetricsResponse::class,
             $response
         );
 
@@ -398,7 +407,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Servers\MetricsResponse::class,
+            MetricsResponse::class,
             $response
         );
 
@@ -421,7 +430,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->powerOn('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -442,7 +451,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->powerOff('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -463,7 +472,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->reboot('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -484,7 +493,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->shutdown('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -505,7 +514,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->reset('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -529,7 +538,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -555,7 +564,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -580,7 +589,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -609,7 +618,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -632,7 +641,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->resetPassword('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -653,7 +662,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->requestConsole('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ConsoleResponse::class,
+            ConsoleResponse::class,
             $response
         );
 
@@ -677,7 +686,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -702,7 +711,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -727,7 +736,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -752,7 +761,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -774,7 +783,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->detachIso('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -797,7 +806,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -819,7 +828,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->removeFromPlacementGroup('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -840,7 +849,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->enableBackups('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -861,7 +870,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->disableBackups('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -885,7 +894,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -908,7 +917,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->disableRescueMode('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -931,7 +940,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -953,7 +962,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->list('12345');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ListActionsResponse::class,
+            ListActionsResponse::class,
             $response
         );
 
@@ -977,7 +986,7 @@ class ServersTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ListActionsResponse::class,
+            ListActionsResponse::class,
             $response
         );
 
@@ -1027,7 +1036,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->create(['name' => 'existing-server']);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Servers\CreateResponse::class,
+            CreateResponse::class,
             $response
         );
 
@@ -1236,14 +1245,14 @@ class ServersTest extends TestCase
         // First call succeeds
         $response1 = $client->servers()->list();
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Servers\ListResponse::class,
+            ListResponse::class,
             $response1
         );
 
         // Second call returns error response
         $response2 = $client->servers()->list();
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Servers\ListResponse::class,
+            ListResponse::class,
             $response2
         );
 
@@ -1285,7 +1294,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->powerOn('67890');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ActionResponse::class,
+            ActionResponse::class,
             $response
         );
 
@@ -1326,7 +1335,7 @@ class ServersTest extends TestCase
         $response = $client->servers()->actions()->requestConsole('67890');
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\ServerActions\ConsoleResponse::class,
+            ConsoleResponse::class,
             $response
         );
 

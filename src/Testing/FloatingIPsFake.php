@@ -3,11 +3,17 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\FloatingIPs\CreateRequest;
+use Boci\HetznerLaravel\Requests\FloatingIPs\DeleteRequest;
+use Boci\HetznerLaravel\Requests\FloatingIPs\ListRequest;
+use Boci\HetznerLaravel\Requests\FloatingIPs\RetrieveRequest;
+use Boci\HetznerLaravel\Requests\FloatingIPs\UpdateRequest;
 use Boci\HetznerLaravel\Responses\FloatingIPs\CreateResponse;
 use Boci\HetznerLaravel\Responses\FloatingIPs\DeleteResponse;
 use Boci\HetznerLaravel\Responses\FloatingIPs\ListResponse;
 use Boci\HetznerLaravel\Responses\FloatingIPs\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\FloatingIPs\UpdateResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -53,7 +59,7 @@ final class FloatingIPsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return CreateResponse::from($response, new \Boci\HetznerLaravel\Requests\FloatingIPs\CreateRequest($parameters));
+            return CreateResponse::from($response, new CreateRequest($parameters));
         }
 
         return CreateResponse::fake($parameters);
@@ -81,7 +87,7 @@ final class FloatingIPsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListResponse::from($response, new \Boci\HetznerLaravel\Requests\FloatingIPs\ListRequest($parameters));
+            return ListResponse::from($response, new ListRequest($parameters));
         }
 
         return ListResponse::fake($parameters);
@@ -109,7 +115,7 @@ final class FloatingIPsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return RetrieveResponse::from($response, new \Boci\HetznerLaravel\Requests\FloatingIPs\RetrieveRequest($floatingIpId));
+            return RetrieveResponse::from($response, new RetrieveRequest($floatingIpId));
         }
 
         return RetrieveResponse::fake(['floatingIpId' => $floatingIpId]);
@@ -138,7 +144,7 @@ final class FloatingIPsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return UpdateResponse::from($response, new \Boci\HetznerLaravel\Requests\FloatingIPs\UpdateRequest($floatingIpId, $parameters));
+            return UpdateResponse::from($response, new UpdateRequest($floatingIpId, $parameters));
         }
 
         return UpdateResponse::fake(array_merge(['floatingIpId' => $floatingIpId], $parameters));
@@ -166,7 +172,7 @@ final class FloatingIPsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return DeleteResponse::from($response, new \Boci\HetznerLaravel\Requests\FloatingIPs\DeleteRequest($floatingIpId));
+            return DeleteResponse::from($response, new DeleteRequest($floatingIpId));
         }
 
         return DeleteResponse::fake(['floatingIpId' => $floatingIpId]);
@@ -192,7 +198,7 @@ final class FloatingIPsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to floating_ips.');
+            throw new AssertionFailedError('No requests were sent to floating_ips.');
         }
     }
 
@@ -204,7 +210,7 @@ final class FloatingIPsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'floating_ips');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to floating_ips.');
+            throw new AssertionFailedError('Requests were sent to floating_ips.');
         }
     }
 }

@@ -11,6 +11,7 @@ use Boci\HetznerLaravel\Responses\Images\Image;
 use Boci\HetznerLaravel\Responses\Images\ListResponse;
 use Boci\HetznerLaravel\Responses\Images\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\Images\UpdateResponse;
+use Boci\HetznerLaravel\Testing\ImagesFake;
 use Boci\HetznerLaravel\Testing\TestCase;
 use GuzzleHttp\Psr7\Response;
 
@@ -475,7 +476,7 @@ final class ImagesTest extends TestCase
         $responses = [];
         $requests = [];
 
-        $imagesFake = new \Boci\HetznerLaravel\Testing\ImagesFake($responses, $requests);
+        $imagesFake = new ImagesFake($responses, $requests);
 
         // Test various image operations
         $imagesFake->list();

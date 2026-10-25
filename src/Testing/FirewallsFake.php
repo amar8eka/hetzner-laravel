@@ -3,11 +3,17 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\Firewalls\CreateRequest;
+use Boci\HetznerLaravel\Requests\Firewalls\DeleteRequest;
+use Boci\HetznerLaravel\Requests\Firewalls\ListRequest;
+use Boci\HetznerLaravel\Requests\Firewalls\RetrieveRequest;
+use Boci\HetznerLaravel\Requests\Firewalls\UpdateRequest;
 use Boci\HetznerLaravel\Responses\Firewalls\CreateResponse;
 use Boci\HetznerLaravel\Responses\Firewalls\DeleteResponse;
 use Boci\HetznerLaravel\Responses\Firewalls\ListResponse;
 use Boci\HetznerLaravel\Responses\Firewalls\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\Firewalls\UpdateResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -53,7 +59,7 @@ final class FirewallsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return CreateResponse::from($response, new \Boci\HetznerLaravel\Requests\Firewalls\CreateRequest($parameters));
+            return CreateResponse::from($response, new CreateRequest($parameters));
         }
 
         return CreateResponse::fake($parameters);
@@ -81,7 +87,7 @@ final class FirewallsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListResponse::from($response, new \Boci\HetznerLaravel\Requests\Firewalls\ListRequest($parameters));
+            return ListResponse::from($response, new ListRequest($parameters));
         }
 
         return ListResponse::fake($parameters);
@@ -109,7 +115,7 @@ final class FirewallsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return RetrieveResponse::from($response, new \Boci\HetznerLaravel\Requests\Firewalls\RetrieveRequest($firewallId));
+            return RetrieveResponse::from($response, new RetrieveRequest($firewallId));
         }
 
         return RetrieveResponse::fake(['firewallId' => $firewallId]);
@@ -138,7 +144,7 @@ final class FirewallsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return UpdateResponse::from($response, new \Boci\HetznerLaravel\Requests\Firewalls\UpdateRequest($firewallId, $parameters));
+            return UpdateResponse::from($response, new UpdateRequest($firewallId, $parameters));
         }
 
         return UpdateResponse::fake(array_merge(['firewallId' => $firewallId], $parameters));
@@ -166,7 +172,7 @@ final class FirewallsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return DeleteResponse::from($response, new \Boci\HetznerLaravel\Requests\Firewalls\DeleteRequest($firewallId));
+            return DeleteResponse::from($response, new DeleteRequest($firewallId));
         }
 
         return DeleteResponse::fake(['firewallId' => $firewallId]);
@@ -175,9 +181,9 @@ final class FirewallsFake implements ResourceContract
     /**
      * Get access to Firewall actions (fake implementation).
      */
-    public function actions(): \Boci\HetznerLaravel\Testing\FirewallActionsFake
+    public function actions(): FirewallActionsFake
     {
-        return new \Boci\HetznerLaravel\Testing\FirewallActionsFake($this->responses, $this->requests);
+        return new FirewallActionsFake($this->responses, $this->requests);
     }
 
     /**
@@ -192,7 +198,7 @@ final class FirewallsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to firewalls.');
+            throw new AssertionFailedError('No requests were sent to firewalls.');
         }
     }
 
@@ -204,7 +210,7 @@ final class FirewallsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'firewalls');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to firewalls.');
+            throw new AssertionFailedError('Requests were sent to firewalls.');
         }
     }
 }

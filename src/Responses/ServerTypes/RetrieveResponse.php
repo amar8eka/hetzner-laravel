@@ -2,6 +2,7 @@
 
 namespace Boci\HetznerLaravel\Responses\ServerTypes;
 
+use Boci\HetznerLaravel\Meta\MetaInformation;
 use Boci\HetznerLaravel\Responses\Response;
 
 /**
@@ -54,7 +55,7 @@ final class RetrieveResponse extends Response
                 'cpu_type' => 'shared',
             ],
         ];
-        $meta = new \Boci\HetznerLaravel\Meta\MetaInformation;
+        $meta = new MetaInformation;
 
         return new self($data, $meta);
     }

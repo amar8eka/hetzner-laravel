@@ -2,9 +2,11 @@
 
 namespace Tests;
 
+use Boci\HetznerLaravel\Responses\Billing\ListPricingResponse;
 use Boci\HetznerLaravel\Testing\TestCase;
 use Exception;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Billing Test Suite
@@ -27,7 +29,7 @@ class BillingTest extends TestCase
         $response = $client->billing()->listPricing();
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Billing\ListPricingResponse::class,
+            ListPricingResponse::class,
             $response
         );
 
@@ -194,7 +196,7 @@ class BillingTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Billing\ListPricingResponse::class,
+            ListPricingResponse::class,
             $response
         );
 
@@ -451,7 +453,7 @@ class BillingTest extends TestCase
         $response = $client->billing()->listPricing();
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Billing\ListPricingResponse::class,
+            ListPricingResponse::class,
             $response
         );
 
@@ -501,7 +503,7 @@ class BillingTest extends TestCase
         // First call succeeds
         $response1 = $client->billing()->listPricing();
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Billing\ListPricingResponse::class,
+            ListPricingResponse::class,
             $response1
         );
 
@@ -531,7 +533,7 @@ class BillingTest extends TestCase
         ]);
 
         $this->assertInstanceOf(
-            \Boci\HetznerLaravel\Responses\Billing\ListPricingResponse::class,
+            ListPricingResponse::class,
             $response
         );
 
@@ -586,7 +588,7 @@ class BillingTest extends TestCase
         $billingFake->listPricing();
 
         // Now it should fail
-        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectException(AssertionFailedError::class);
         $billingFake->assertNotSent();
     }
 

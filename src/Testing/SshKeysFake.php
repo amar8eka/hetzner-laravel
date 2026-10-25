@@ -3,11 +3,17 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\SshKeys\CreateRequest;
+use Boci\HetznerLaravel\Requests\SshKeys\DeleteRequest;
+use Boci\HetznerLaravel\Requests\SshKeys\ListRequest;
+use Boci\HetznerLaravel\Requests\SshKeys\RetrieveRequest;
+use Boci\HetznerLaravel\Requests\SshKeys\UpdateRequest;
 use Boci\HetznerLaravel\Responses\SshKeys\CreateResponse;
 use Boci\HetznerLaravel\Responses\SshKeys\DeleteResponse;
 use Boci\HetznerLaravel\Responses\SshKeys\ListResponse;
 use Boci\HetznerLaravel\Responses\SshKeys\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\SshKeys\UpdateResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -36,7 +42,7 @@ final class SshKeysFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return CreateResponse::from($response, new \Boci\HetznerLaravel\Requests\SshKeys\CreateRequest($parameters));
+            return CreateResponse::from($response, new CreateRequest($parameters));
         }
 
         return CreateResponse::fake($parameters);
@@ -60,7 +66,7 @@ final class SshKeysFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListResponse::from($response, new \Boci\HetznerLaravel\Requests\SshKeys\ListRequest($parameters));
+            return ListResponse::from($response, new ListRequest($parameters));
         }
 
         return ListResponse::fake($parameters);
@@ -81,7 +87,7 @@ final class SshKeysFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return RetrieveResponse::from($response, new \Boci\HetznerLaravel\Requests\SshKeys\RetrieveRequest($sshKeyId));
+            return RetrieveResponse::from($response, new RetrieveRequest($sshKeyId));
         }
 
         return RetrieveResponse::fake(['sshKeyId' => $sshKeyId]);
@@ -105,7 +111,7 @@ final class SshKeysFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return UpdateResponse::from($response, new \Boci\HetznerLaravel\Requests\SshKeys\UpdateRequest($sshKeyId, $parameters));
+            return UpdateResponse::from($response, new UpdateRequest($sshKeyId, $parameters));
         }
 
         return UpdateResponse::fake(array_merge(['sshKeyId' => $sshKeyId], $parameters));
@@ -126,7 +132,7 @@ final class SshKeysFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return DeleteResponse::from($response, new \Boci\HetznerLaravel\Requests\SshKeys\DeleteRequest($sshKeyId));
+            return DeleteResponse::from($response, new DeleteRequest($sshKeyId));
         }
 
         return DeleteResponse::fake(['sshKeyId' => $sshKeyId]);
@@ -138,7 +144,7 @@ final class SshKeysFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to ssh_keys.');
+            throw new AssertionFailedError('No requests were sent to ssh_keys.');
         }
     }
 
@@ -147,7 +153,7 @@ final class SshKeysFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'ssh_keys');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to ssh_keys.');
+            throw new AssertionFailedError('Requests were sent to ssh_keys.');
         }
     }
 }

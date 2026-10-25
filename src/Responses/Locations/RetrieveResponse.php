@@ -2,6 +2,7 @@
 
 namespace Boci\HetznerLaravel\Responses\Locations;
 
+use Boci\HetznerLaravel\Meta\MetaInformation;
 use Boci\HetznerLaravel\Responses\Response;
 
 /**
@@ -87,7 +88,7 @@ final class RetrieveResponse extends Response
         $data = [
             'location' => $locationData,
         ];
-        $meta = new \Boci\HetznerLaravel\Meta\MetaInformation;
+        $meta = new MetaInformation;
 
         return new self($data, $meta);
     }

@@ -3,6 +3,7 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Base Test Case
@@ -15,7 +16,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake client with optional responses and request tracking.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeClient(array &$responses = [], array &$requests = []): ClientFake
@@ -26,7 +27,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake servers resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeServers(array $responses = [], array &$requests = []): ServersFake
@@ -37,7 +38,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake images resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeImages(array $responses = [], array &$requests = []): ImagesFake
@@ -48,7 +49,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake locations resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeLocations(array $responses = [], array &$requests = []): LocationsFake
@@ -59,7 +60,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake server types resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeServerTypes(array $responses = [], array &$requests = []): ServerTypesFake
@@ -70,7 +71,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake SSH keys resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeSshKeys(array $responses = [], array &$requests = []): SshKeysFake
@@ -81,7 +82,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake certificates resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeCertificates(array $responses = [], array &$requests = []): CertificatesFake
@@ -92,7 +93,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake actions resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeActions(array $responses = [], array &$requests = []): ActionsFake
@@ -103,7 +104,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake billing resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeBilling(array $responses = [], array &$requests = []): BillingFake
@@ -114,7 +115,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake firewalls resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeFirewalls(array $responses = [], array &$requests = []): FirewallsFake
@@ -125,7 +126,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake floating IPs resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeFloatingIPs(array $responses = [], array &$requests = []): FloatingIPsFake
@@ -136,7 +137,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake ISOs resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeISOs(array $responses = [], array &$requests = []): ISOsFake
@@ -147,7 +148,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake load balancers resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeLoadBalancers(array $responses = [], array &$requests = []): LoadBalancersFake
@@ -158,7 +159,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake load balancer types resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeLoadBalancerTypes(array $responses = [], array &$requests = []): LoadBalancerTypesFake
@@ -169,7 +170,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake networks resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeNetworks(array $responses = [], array &$requests = []): NetworksFake
@@ -180,7 +181,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake placement groups resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakePlacementGroups(array $responses = [], array &$requests = []): PlacementGroupsFake
@@ -191,7 +192,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake primary IPs resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakePrimaryIPs(array $responses = [], array &$requests = []): PrimaryIPsFake
@@ -202,7 +203,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake volumes resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeVolumes(array $responses = [], array &$requests = []): VolumesFake
@@ -213,7 +214,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake firewall actions resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeFirewallActions(array $responses = [], array &$requests = []): FirewallActionsFake
@@ -224,7 +225,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake floating IP actions resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeFloatingIPActions(array $responses = [], array &$requests = []): FloatingIPActionsFake
@@ -235,7 +236,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake image actions resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeImageActions(array $responses = [], array &$requests = []): ImageActionsFake
@@ -246,7 +247,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake load balancer actions resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeLoadBalancerActions(array $responses = [], array &$requests = []): LoadBalancerActionsFake
@@ -257,7 +258,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake network actions resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeNetworkActions(array $responses = [], array &$requests = []): NetworkActionsFake
@@ -268,7 +269,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake primary IP actions resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakePrimaryIPActions(array $responses = [], array &$requests = []): PrimaryIPActionsFake
@@ -279,7 +280,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake server actions resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeServerActions(array $responses = [], array &$requests = []): ServerActionsFake
@@ -290,7 +291,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create a fake volume actions resource.
      *
-     * @param  array<int, \Psr\Http\Message\ResponseInterface|\Throwable>  $responses
+     * @param  array<int, ResponseInterface|\Throwable>  $responses
      * @param  array<int, array{resource: string, method: string, parameters: array}>  $requests
      */
     protected function fakeVolumeActions(array $responses = [], array &$requests = []): VolumeActionsFake

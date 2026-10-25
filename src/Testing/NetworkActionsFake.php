@@ -3,8 +3,17 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\NetworkActions\AddRouteRequest;
+use Boci\HetznerLaravel\Requests\NetworkActions\AddSubnetRequest;
+use Boci\HetznerLaravel\Requests\NetworkActions\ChangeIpRangeRequest;
+use Boci\HetznerLaravel\Requests\NetworkActions\ChangeProtectionRequest;
+use Boci\HetznerLaravel\Requests\NetworkActions\DeleteRouteRequest;
+use Boci\HetznerLaravel\Requests\NetworkActions\DeleteSubnetRequest;
+use Boci\HetznerLaravel\Requests\NetworkActions\GetActionRequest;
+use Boci\HetznerLaravel\Requests\NetworkActions\ListActionsRequest;
 use Boci\HetznerLaravel\Responses\NetworkActions\ActionResponse;
 use Boci\HetznerLaravel\Responses\NetworkActions\ListActionsResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -51,7 +60,7 @@ final class NetworkActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListActionsResponse::from($response, new \Boci\HetznerLaravel\Requests\NetworkActions\ListActionsRequest($networkId, $parameters));
+            return ListActionsResponse::from($response, new ListActionsRequest($networkId, $parameters));
         }
 
         return ListActionsResponse::fake(array_merge(['networkId' => $networkId], $parameters));
@@ -80,7 +89,7 @@ final class NetworkActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\NetworkActions\GetActionRequest($networkId, $actionId));
+            return ActionResponse::from($response, new GetActionRequest($networkId, $actionId));
         }
 
         return ActionResponse::fake(['networkId' => $networkId, 'actionId' => $actionId]);
@@ -109,7 +118,7 @@ final class NetworkActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\NetworkActions\AddRouteRequest($networkId, $parameters));
+            return ActionResponse::from($response, new AddRouteRequest($networkId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['networkId' => $networkId, 'command' => 'add_route'], $parameters));
@@ -138,7 +147,7 @@ final class NetworkActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\NetworkActions\AddSubnetRequest($networkId, $parameters));
+            return ActionResponse::from($response, new AddSubnetRequest($networkId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['networkId' => $networkId, 'command' => 'add_subnet'], $parameters));
@@ -167,7 +176,7 @@ final class NetworkActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\NetworkActions\ChangeIpRangeRequest($networkId, $parameters));
+            return ActionResponse::from($response, new ChangeIpRangeRequest($networkId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['networkId' => $networkId, 'command' => 'change_ip_range'], $parameters));
@@ -196,7 +205,7 @@ final class NetworkActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\NetworkActions\ChangeProtectionRequest($networkId, $parameters));
+            return ActionResponse::from($response, new ChangeProtectionRequest($networkId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['networkId' => $networkId, 'command' => 'change_protection'], $parameters));
@@ -225,7 +234,7 @@ final class NetworkActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\NetworkActions\DeleteRouteRequest($networkId, $routeId));
+            return ActionResponse::from($response, new DeleteRouteRequest($networkId, $routeId));
         }
 
         return ActionResponse::fake(['networkId' => $networkId, 'routeId' => $routeId, 'command' => 'delete_route']);
@@ -254,7 +263,7 @@ final class NetworkActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\NetworkActions\DeleteSubnetRequest($networkId, $subnetId));
+            return ActionResponse::from($response, new DeleteSubnetRequest($networkId, $subnetId));
         }
 
         return ActionResponse::fake(['networkId' => $networkId, 'subnetId' => $subnetId, 'command' => 'delete_subnet']);
@@ -272,7 +281,7 @@ final class NetworkActionsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to network_actions.');
+            throw new AssertionFailedError('No requests were sent to network_actions.');
         }
     }
 
@@ -284,7 +293,7 @@ final class NetworkActionsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'network_actions');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to network_actions.');
+            throw new AssertionFailedError('Requests were sent to network_actions.');
         }
     }
 }

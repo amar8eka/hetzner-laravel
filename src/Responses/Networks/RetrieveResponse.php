@@ -2,6 +2,7 @@
 
 namespace Boci\HetznerLaravel\Responses\Networks;
 
+use Boci\HetznerLaravel\Meta\MetaInformation;
 use Boci\HetznerLaravel\Responses\Response;
 
 /**
@@ -60,7 +61,7 @@ final class RetrieveResponse extends Response
                 'created' => '2016-01-30T23:50:00+00:00',
             ],
         ];
-        $meta = new \Boci\HetznerLaravel\Meta\MetaInformation;
+        $meta = new MetaInformation;
 
         return new self($data, $meta);
     }

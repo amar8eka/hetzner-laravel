@@ -2,6 +2,7 @@
 
 namespace Boci\HetznerLaravel\Responses\Firewalls;
 
+use Boci\HetznerLaravel\Meta\MetaInformation;
 use Boci\HetznerLaravel\Responses\Response;
 
 /**
@@ -22,7 +23,7 @@ final class DeleteResponse extends Response
     public static function fake(array $parameters = []): self
     {
         $data = [];
-        $meta = new \Boci\HetznerLaravel\Meta\MetaInformation;
+        $meta = new MetaInformation;
 
         return new self($data, $meta);
     }

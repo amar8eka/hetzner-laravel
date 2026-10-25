@@ -7,6 +7,7 @@ namespace Tests;
 use Boci\HetznerLaravel\Responses\Actions\Action;
 use Boci\HetznerLaravel\Responses\Actions\GetActionResponse;
 use Boci\HetznerLaravel\Responses\Actions\ListActionsResponse;
+use Boci\HetznerLaravel\Testing\ActionsFake;
 use Boci\HetznerLaravel\Testing\TestCase;
 use GuzzleHttp\Psr7\Response;
 
@@ -434,7 +435,7 @@ final class ActionsTest extends TestCase
         $responses = [];
         $requests = [];
 
-        $actionsFake = new \Boci\HetznerLaravel\Testing\ActionsFake($responses, $requests);
+        $actionsFake = new ActionsFake($responses, $requests);
 
         // Test various actions operations
         $actionsFake->list();

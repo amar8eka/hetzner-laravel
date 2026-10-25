@@ -3,11 +3,17 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\Volumes\CreateRequest;
+use Boci\HetznerLaravel\Requests\Volumes\DeleteRequest;
+use Boci\HetznerLaravel\Requests\Volumes\ListRequest;
+use Boci\HetznerLaravel\Requests\Volumes\RetrieveRequest;
+use Boci\HetznerLaravel\Requests\Volumes\UpdateRequest;
 use Boci\HetznerLaravel\Responses\Volumes\CreateResponse;
 use Boci\HetznerLaravel\Responses\Volumes\DeleteResponse;
 use Boci\HetznerLaravel\Responses\Volumes\ListResponse;
 use Boci\HetznerLaravel\Responses\Volumes\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\Volumes\UpdateResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -53,7 +59,7 @@ final class VolumesFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return CreateResponse::from($response, new \Boci\HetznerLaravel\Requests\Volumes\CreateRequest($parameters));
+            return CreateResponse::from($response, new CreateRequest($parameters));
         }
 
         return CreateResponse::fake($parameters);
@@ -81,7 +87,7 @@ final class VolumesFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListResponse::from($response, new \Boci\HetznerLaravel\Requests\Volumes\ListRequest($parameters));
+            return ListResponse::from($response, new ListRequest($parameters));
         }
 
         return ListResponse::fake($parameters);
@@ -109,7 +115,7 @@ final class VolumesFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return RetrieveResponse::from($response, new \Boci\HetznerLaravel\Requests\Volumes\RetrieveRequest($volumeId));
+            return RetrieveResponse::from($response, new RetrieveRequest($volumeId));
         }
 
         return RetrieveResponse::fake(['volumeId' => $volumeId]);
@@ -138,7 +144,7 @@ final class VolumesFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return UpdateResponse::from($response, new \Boci\HetznerLaravel\Requests\Volumes\UpdateRequest($volumeId, $parameters));
+            return UpdateResponse::from($response, new UpdateRequest($volumeId, $parameters));
         }
 
         return UpdateResponse::fake(array_merge(['volumeId' => $volumeId], $parameters));
@@ -166,7 +172,7 @@ final class VolumesFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return DeleteResponse::from($response, new \Boci\HetznerLaravel\Requests\Volumes\DeleteRequest($volumeId));
+            return DeleteResponse::from($response, new DeleteRequest($volumeId));
         }
 
         return DeleteResponse::fake(['volumeId' => $volumeId]);
@@ -192,7 +198,7 @@ final class VolumesFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to volumes.');
+            throw new AssertionFailedError('No requests were sent to volumes.');
         }
     }
 
@@ -204,7 +210,7 @@ final class VolumesFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'volumes');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to volumes.');
+            throw new AssertionFailedError('Requests were sent to volumes.');
         }
     }
 }

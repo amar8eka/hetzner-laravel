@@ -3,8 +3,11 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\ServerTypes\ListRequest;
+use Boci\HetznerLaravel\Requests\ServerTypes\RetrieveRequest;
 use Boci\HetznerLaravel\Responses\ServerTypes\ListResponse;
 use Boci\HetznerLaravel\Responses\ServerTypes\RetrieveResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -50,7 +53,7 @@ final class ServerTypesFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerTypes\ListRequest($parameters));
+            return ListResponse::from($response, new ListRequest($parameters));
         }
 
         return ListResponse::fake($parameters);
@@ -78,7 +81,7 @@ final class ServerTypesFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return RetrieveResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerTypes\RetrieveRequest($serverTypeId));
+            return RetrieveResponse::from($response, new RetrieveRequest($serverTypeId));
         }
 
         return RetrieveResponse::fake(['serverTypeId' => $serverTypeId]);
@@ -96,7 +99,7 @@ final class ServerTypesFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to server_types.');
+            throw new AssertionFailedError('No requests were sent to server_types.');
         }
     }
 
@@ -108,7 +111,7 @@ final class ServerTypesFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'server_types');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to server_types.');
+            throw new AssertionFailedError('Requests were sent to server_types.');
         }
     }
 }
