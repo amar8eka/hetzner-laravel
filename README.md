@@ -38,6 +38,44 @@ Add your Hetzner API token to your `.env` file:
 HETZNER_TOKEN=your-hetzner-api-token-here
 ```
 
+### Multiple Projects
+
+Every Hetzner Cloud API token belongs to exactly one project. To manage more than one project, add an entry per project to `config/hetzner-laravel.php`:
+
+```php
+'default' => env('HETZNER_PROJECT', 'default'),
+
+'projects' => [
+    'default' => [
+        'token' => env('HETZNER_TOKEN'),
+    ],
+
+    'staging' => [
+        'token' => env('HETZNER_STAGING_TOKEN'),
+    ],
+],
+```
+
+```php
+use Boci\HetznerLaravel\Facades\HetznerLaravel;
+
+// Default project
+$servers = HetznerLaravel::servers()->list();
+
+// A configured project
+$servers = HetznerLaravel::project('staging')->servers()->list();
+
+// A token that is only known at runtime, e.g. stored per team in the database
+$servers = HetznerLaravel::withToken($team->hetzner_token)->servers()->list();
+
+// Change the default project, e.g. in a middleware
+HetznerLaravel::setDefaultProject('staging');
+```
+
+Clients for configured projects are created once and reused. `withToken()` always returns a new client, so runtime tokens are never shared. An unknown project or a project without a token throws an `InvalidArgumentException`.
+
+> Configuration files published before 1.1.0 only have a `token` key. They keep working, and the token is used for the default project.
+
 ## Usage
 
 ### Basic Usage

@@ -23,8 +23,6 @@ class HetznerLaravelServiceProvider extends ServiceProvider
             ], 'config');
         }
 
-        // Register the facade
-        $this->app->alias(Client::class, 'hetzner');
     }
 
     /**
@@ -35,12 +33,16 @@ class HetznerLaravelServiceProvider extends ServiceProvider
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'hetzner-laravel');
 
-        // Register the main client
-        $this->app->singleton(Client::class, function () {
-            return Client::factory()
-                ->withApiKey(config('hetzner-laravel.token'))
-                ->withBaseUri(config('hetzner-laravel.base_url', 'https://api.hetzner.cloud/v1'))
-                ->make();
+        // Register the manager that holds a client per project
+        $this->app->singleton(HetznerManager::class, function ($app) {
+            return new HetznerManager($app['config']->get('hetzner-laravel', []));
+        });
+
+        $this->app->alias(HetznerManager::class, 'hetzner');
+
+        // Register the client of the default project
+        $this->app->bind(Client::class, function ($app) {
+            return $app->make(HetznerManager::class)->project();
         });
 
         // Register alias for backward compatibility

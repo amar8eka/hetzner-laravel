@@ -2,7 +2,7 @@
 
 namespace Boci\HetznerLaravel\Facades;
 
-use Boci\HetznerLaravel\Client;
+use Boci\HetznerLaravel\HetznerManager;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -10,8 +10,14 @@ use Illuminate\Support\Facades\Facade;
  *
  * This facade provides static access to the Hetzner Cloud API client and its resources.
  * It allows for convenient access to all Hetzner Cloud API functionality through
- * Laravel's facade system.
+ * Laravel's facade system, for the default project or any configured project.
  *
+ * @method static \Boci\HetznerLaravel\Client project(?string $name = null) Get the client for a configured project
+ * @method static \Boci\HetznerLaravel\Client withToken(string $token, ?string $baseUri = null) Get a client for a runtime token
+ * @method static string getDefaultProject() Get the name of the default project
+ * @method static \Boci\HetznerLaravel\HetznerManager setDefaultProject(string $name) Set the default project
+ * @method static array<int, string> projects() Get the names of all configured projects
+ * @method static \Boci\HetznerLaravel\HetznerManager forgetProject(?string $name = null) Forget a resolved project client
  * @method static \Boci\HetznerLaravel\Resources\Servers servers() Get the servers resource
  * @method static \Boci\HetznerLaravel\Resources\Images images() Get the images resource
  * @method static \Boci\HetznerLaravel\Resources\Locations locations() Get the locations resource
@@ -29,6 +35,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Boci\HetznerLaravel\Resources\LoadBalancers loadBalancers() Get the load balancers resource
  * @method static \Boci\HetznerLaravel\Resources\LoadBalancerTypes loadBalancerTypes() Get the load balancer types resource
  * @method static \Boci\HetznerLaravel\Resources\ISOs isos() Get the ISOs resource
+ * @method static \Boci\HetznerLaravel\Resources\DnsZones dnsZones() Get the DNS zones resource
  */
 class HetznerLaravel extends Facade
 {
@@ -37,6 +44,6 @@ class HetznerLaravel extends Facade
      */
     protected static function getFacadeAccessor(): string
     {
-        return Client::class;
+        return HetznerManager::class;
     }
 }
