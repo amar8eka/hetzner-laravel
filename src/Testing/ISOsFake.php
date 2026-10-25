@@ -3,8 +3,11 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\ISOs\ListRequest;
+use Boci\HetznerLaravel\Requests\ISOs\RetrieveRequest;
 use Boci\HetznerLaravel\Responses\ISOs\ListResponse;
 use Boci\HetznerLaravel\Responses\ISOs\RetrieveResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -50,7 +53,7 @@ final class ISOsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListResponse::from($response, new \Boci\HetznerLaravel\Requests\ISOs\ListRequest($parameters));
+            return ListResponse::from($response, new ListRequest($parameters));
         }
 
         return ListResponse::fake($parameters);
@@ -78,7 +81,7 @@ final class ISOsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return RetrieveResponse::from($response, new \Boci\HetznerLaravel\Requests\ISOs\RetrieveRequest($isoId));
+            return RetrieveResponse::from($response, new RetrieveRequest($isoId));
         }
 
         return RetrieveResponse::fake(['isoId' => $isoId]);
@@ -96,7 +99,7 @@ final class ISOsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to isos.');
+            throw new AssertionFailedError('No requests were sent to isos.');
         }
     }
 
@@ -108,7 +111,7 @@ final class ISOsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'isos');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to isos.');
+            throw new AssertionFailedError('Requests were sent to isos.');
         }
     }
 }

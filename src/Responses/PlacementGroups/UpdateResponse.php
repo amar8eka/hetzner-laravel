@@ -2,6 +2,7 @@
 
 namespace Boci\HetznerLaravel\Responses\PlacementGroups;
 
+use Boci\HetznerLaravel\Meta\MetaInformation;
 use Boci\HetznerLaravel\Responses\Response;
 
 /**
@@ -42,7 +43,7 @@ final class UpdateResponse extends Response
                 'servers' => [4711, 4712],
             ],
         ];
-        $meta = new \Boci\HetznerLaravel\Meta\MetaInformation;
+        $meta = new MetaInformation;
 
         return new self($data, $meta);
     }

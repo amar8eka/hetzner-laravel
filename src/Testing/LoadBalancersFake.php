@@ -3,11 +3,19 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\LoadBalancers\CreateRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancers\DeleteRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancers\ListRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancers\MetricsRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancers\RetrieveRequest;
+use Boci\HetznerLaravel\Requests\LoadBalancers\UpdateRequest;
 use Boci\HetznerLaravel\Responses\LoadBalancers\CreateResponse;
 use Boci\HetznerLaravel\Responses\LoadBalancers\DeleteResponse;
 use Boci\HetznerLaravel\Responses\LoadBalancers\ListResponse;
+use Boci\HetznerLaravel\Responses\LoadBalancers\MetricsResponse;
 use Boci\HetznerLaravel\Responses\LoadBalancers\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\LoadBalancers\UpdateResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -53,7 +61,7 @@ final class LoadBalancersFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return CreateResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancers\CreateRequest($parameters));
+            return CreateResponse::from($response, new CreateRequest($parameters));
         }
 
         return CreateResponse::fake($parameters);
@@ -81,7 +89,7 @@ final class LoadBalancersFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancers\ListRequest($parameters));
+            return ListResponse::from($response, new ListRequest($parameters));
         }
 
         return ListResponse::fake($parameters);
@@ -109,7 +117,7 @@ final class LoadBalancersFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return RetrieveResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancers\RetrieveRequest($loadBalancerId));
+            return RetrieveResponse::from($response, new RetrieveRequest($loadBalancerId));
         }
 
         return RetrieveResponse::fake(['loadBalancerId' => $loadBalancerId]);
@@ -138,7 +146,7 @@ final class LoadBalancersFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return UpdateResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancers\UpdateRequest($loadBalancerId, $parameters));
+            return UpdateResponse::from($response, new UpdateRequest($loadBalancerId, $parameters));
         }
 
         return UpdateResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters));
@@ -166,7 +174,7 @@ final class LoadBalancersFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return DeleteResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancers\DeleteRequest($loadBalancerId));
+            return DeleteResponse::from($response, new DeleteRequest($loadBalancerId));
         }
 
         return DeleteResponse::fake(['loadBalancerId' => $loadBalancerId]);
@@ -180,7 +188,7 @@ final class LoadBalancersFake implements ResourceContract
      *
      * @throws Throwable When a mock exception is provided
      */
-    public function metrics(string $loadBalancerId, array $parameters = []): \Boci\HetznerLaravel\Responses\LoadBalancers\MetricsResponse
+    public function metrics(string $loadBalancerId, array $parameters = []): MetricsResponse
     {
         $this->requests[] = [
             'resource' => 'load_balancers',
@@ -195,18 +203,18 @@ final class LoadBalancersFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return \Boci\HetznerLaravel\Responses\LoadBalancers\MetricsResponse::from($response, new \Boci\HetznerLaravel\Requests\LoadBalancers\MetricsRequest($loadBalancerId, $parameters));
+            return MetricsResponse::from($response, new MetricsRequest($loadBalancerId, $parameters));
         }
 
-        return \Boci\HetznerLaravel\Responses\LoadBalancers\MetricsResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters));
+        return MetricsResponse::fake(array_merge(['loadBalancerId' => $loadBalancerId], $parameters));
     }
 
     /**
      * Get access to Load Balancer actions (fake implementation).
      */
-    public function actions(): \Boci\HetznerLaravel\Testing\LoadBalancerActionsFake
+    public function actions(): LoadBalancerActionsFake
     {
-        return new \Boci\HetznerLaravel\Testing\LoadBalancerActionsFake($this->responses, $this->requests);
+        return new LoadBalancerActionsFake($this->responses, $this->requests);
     }
 
     /**
@@ -221,7 +229,7 @@ final class LoadBalancersFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to load_balancers.');
+            throw new AssertionFailedError('No requests were sent to load_balancers.');
         }
     }
 
@@ -233,7 +241,7 @@ final class LoadBalancersFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'load_balancers');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to load_balancers.');
+            throw new AssertionFailedError('Requests were sent to load_balancers.');
         }
     }
 }

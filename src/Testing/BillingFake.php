@@ -3,7 +3,9 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\Billing\ListPricingRequest;
 use Boci\HetznerLaravel\Responses\Billing\ListPricingResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -49,7 +51,7 @@ final class BillingFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListPricingResponse::from($response, new \Boci\HetznerLaravel\Requests\Billing\ListPricingRequest($parameters));
+            return ListPricingResponse::from($response, new ListPricingRequest($parameters));
         }
 
         return ListPricingResponse::fake($parameters);
@@ -67,7 +69,7 @@ final class BillingFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to billing.');
+            throw new AssertionFailedError('No requests were sent to billing.');
         }
     }
 
@@ -79,7 +81,7 @@ final class BillingFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'billing');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to billing.');
+            throw new AssertionFailedError('Requests were sent to billing.');
         }
     }
 }

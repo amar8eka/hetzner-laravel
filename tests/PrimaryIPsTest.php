@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Boci\HetznerLaravel\Responses\PrimaryIPActions\Action;
 use Boci\HetznerLaravel\Responses\PrimaryIPActions\ActionResponse;
 use Boci\HetznerLaravel\Responses\PrimaryIPActions\ListActionsResponse;
 use Boci\HetznerLaravel\Responses\PrimaryIPs\CreateResponse;
@@ -16,6 +17,7 @@ use Boci\HetznerLaravel\Testing\TestCase;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Primary IPs Test Suite
@@ -733,7 +735,7 @@ final class PrimaryIPsTest extends TestCase
         $primaryIPsFake->list();
 
         // Now it should fail
-        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('Requests were sent to primary_ips.');
         $primaryIPsFake->assertNotSent();
     }
@@ -1024,13 +1026,13 @@ final class PrimaryIPsTest extends TestCase
         $this->assertCount(2, $response->actions());
 
         $actions = $response->actions();
-        $this->assertInstanceOf(\Boci\HetznerLaravel\Responses\PrimaryIPActions\Action::class, $actions[0]);
+        $this->assertInstanceOf(Action::class, $actions[0]);
         $this->assertEquals(1, $actions[0]->id());
         $this->assertEquals('assign_primary_ip', $actions[0]->command());
         $this->assertEquals('success', $actions[0]->status());
         $this->assertEquals(100, $actions[0]->progress());
 
-        $this->assertInstanceOf(\Boci\HetznerLaravel\Responses\PrimaryIPActions\Action::class, $actions[1]);
+        $this->assertInstanceOf(Action::class, $actions[1]);
         $this->assertEquals(2, $actions[1]->id());
         $this->assertEquals('change_reverse_dns', $actions[1]->command());
         $this->assertEquals('running', $actions[1]->status());
@@ -1056,13 +1058,13 @@ final class PrimaryIPsTest extends TestCase
         $this->assertCount(2, $response->actions());
 
         $actions = $response->actions();
-        $this->assertInstanceOf(\Boci\HetznerLaravel\Responses\PrimaryIPActions\Action::class, $actions[0]);
+        $this->assertInstanceOf(Action::class, $actions[0]);
         $this->assertEquals(1, $actions[0]->id());
         $this->assertEquals('assign_primary_ip', $actions[0]->command());
         $this->assertEquals('success', $actions[0]->status());
         $this->assertEquals(100, $actions[0]->progress());
 
-        $this->assertInstanceOf(\Boci\HetznerLaravel\Responses\PrimaryIPActions\Action::class, $actions[1]);
+        $this->assertInstanceOf(Action::class, $actions[1]);
         $this->assertEquals(2, $actions[1]->id());
         $this->assertEquals('change_reverse_dns', $actions[1]->command());
         $this->assertEquals('running', $actions[1]->status());
@@ -1084,7 +1086,7 @@ final class PrimaryIPsTest extends TestCase
         $response = $client->primaryIPs()->actions()->getById($actionId);
 
         $this->assertInstanceOf(ActionResponse::class, $response);
-        $this->assertInstanceOf(\Boci\HetznerLaravel\Responses\PrimaryIPActions\Action::class, $response->action());
+        $this->assertInstanceOf(Action::class, $response->action());
 
         $action = $response->action();
         $this->assertEquals(123, $action->id());
@@ -1109,7 +1111,7 @@ final class PrimaryIPsTest extends TestCase
         $response = $client->primaryIPs()->actions()->retrieve($primaryIpId, $actionId);
 
         $this->assertInstanceOf(ActionResponse::class, $response);
-        $this->assertInstanceOf(\Boci\HetznerLaravel\Responses\PrimaryIPActions\Action::class, $response->action());
+        $this->assertInstanceOf(Action::class, $response->action());
 
         $action = $response->action();
         $this->assertEquals(123, $action->id());
@@ -1297,6 +1299,7 @@ final class PrimaryIPsTest extends TestCase
 
         foreach ($primaryIps as $primaryIp) {
             $datacenter = $primaryIp->datacenter();
+            $this->assertNotNull($datacenter);
 
             // Test datacenter structure
             $this->assertIsInt($datacenter['id']);

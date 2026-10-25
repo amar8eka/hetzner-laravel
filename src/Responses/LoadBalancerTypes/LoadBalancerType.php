@@ -86,6 +86,16 @@ final class LoadBalancerType
     }
 
     /**
+     * Get the deprecation information, or null when it is not deprecated.
+     *
+     * @return array{announced: string, unavailable_after: string}|null
+     */
+    public function deprecation(): ?array
+    {
+        return $this->data['deprecation'] ?? null;
+    }
+
+    /**
      * Convert the load balancer type to an array.
      *
      * @return array<string, mixed>

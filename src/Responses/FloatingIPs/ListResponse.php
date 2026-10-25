@@ -2,6 +2,7 @@
 
 namespace Boci\HetznerLaravel\Responses\FloatingIPs;
 
+use Boci\HetznerLaravel\Meta\MetaInformation;
 use Boci\HetznerLaravel\Responses\Response;
 
 final class ListResponse extends Response
@@ -95,7 +96,7 @@ final class ListResponse extends Response
             ],
         ];
 
-        $meta = new \Boci\HetznerLaravel\Meta\MetaInformation;
+        $meta = new MetaInformation;
 
         return new self($data, $meta);
     }

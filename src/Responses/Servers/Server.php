@@ -82,13 +82,25 @@ final class Server
     }
 
     /**
+     * Get the location information.
+     *
+     * @return array<string, mixed>|null
+     */
+    public function location(): ?array
+    {
+        return $this->data['location'] ?? $this->data['datacenter']['location'] ?? null;
+    }
+
+    /**
      * Get the datacenter information.
      *
-     * @return array<string, mixed>
+     * @deprecated The Hetzner Cloud API no longer returns the datacenter since 1 July 2026, use location() instead.
+     *
+     * @return array<string, mixed>|null
      */
-    public function datacenter(): array
+    public function datacenter(): ?array
     {
-        return $this->data['datacenter'];
+        return $this->data['datacenter'] ?? null;
     }
 
     /**

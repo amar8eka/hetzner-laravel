@@ -88,7 +88,7 @@ abstract class Response
      *
      * @param  string  $name  The property name
      */
-    public function __retrieve(string $name): mixed
+    public function __get(string $name): mixed
     {
         return $this->data[$name] ?? null;
     }

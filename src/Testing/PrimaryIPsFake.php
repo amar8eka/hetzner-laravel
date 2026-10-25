@@ -3,11 +3,17 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\PrimaryIPs\CreateRequest;
+use Boci\HetznerLaravel\Requests\PrimaryIPs\DeleteRequest;
+use Boci\HetznerLaravel\Requests\PrimaryIPs\ListRequest;
+use Boci\HetznerLaravel\Requests\PrimaryIPs\RetrieveRequest;
+use Boci\HetznerLaravel\Requests\PrimaryIPs\UpdateRequest;
 use Boci\HetznerLaravel\Responses\PrimaryIPs\CreateResponse;
 use Boci\HetznerLaravel\Responses\PrimaryIPs\DeleteResponse;
 use Boci\HetznerLaravel\Responses\PrimaryIPs\ListResponse;
 use Boci\HetznerLaravel\Responses\PrimaryIPs\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\PrimaryIPs\UpdateResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -53,7 +59,7 @@ final class PrimaryIPsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return CreateResponse::from($response, new \Boci\HetznerLaravel\Requests\PrimaryIPs\CreateRequest($parameters));
+            return CreateResponse::from($response, new CreateRequest($parameters));
         }
 
         return CreateResponse::fake($parameters);
@@ -81,7 +87,7 @@ final class PrimaryIPsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListResponse::from($response, new \Boci\HetznerLaravel\Requests\PrimaryIPs\ListRequest($parameters));
+            return ListResponse::from($response, new ListRequest($parameters));
         }
 
         return ListResponse::fake($parameters);
@@ -109,7 +115,7 @@ final class PrimaryIPsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return RetrieveResponse::from($response, new \Boci\HetznerLaravel\Requests\PrimaryIPs\RetrieveRequest($primaryIpId));
+            return RetrieveResponse::from($response, new RetrieveRequest($primaryIpId));
         }
 
         return RetrieveResponse::fake(['primaryIpId' => $primaryIpId]);
@@ -138,7 +144,7 @@ final class PrimaryIPsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return UpdateResponse::from($response, new \Boci\HetznerLaravel\Requests\PrimaryIPs\UpdateRequest($primaryIpId, $parameters));
+            return UpdateResponse::from($response, new UpdateRequest($primaryIpId, $parameters));
         }
 
         return UpdateResponse::fake(array_merge(['primaryIpId' => $primaryIpId], $parameters));
@@ -166,7 +172,7 @@ final class PrimaryIPsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return DeleteResponse::from($response, new \Boci\HetznerLaravel\Requests\PrimaryIPs\DeleteRequest($primaryIpId));
+            return DeleteResponse::from($response, new DeleteRequest($primaryIpId));
         }
 
         return DeleteResponse::fake(['primaryIpId' => $primaryIpId]);
@@ -192,7 +198,7 @@ final class PrimaryIPsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to primary_ips.');
+            throw new AssertionFailedError('No requests were sent to primary_ips.');
         }
     }
 
@@ -204,7 +210,7 @@ final class PrimaryIPsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'primary_ips');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to primary_ips.');
+            throw new AssertionFailedError('Requests were sent to primary_ips.');
         }
     }
 }

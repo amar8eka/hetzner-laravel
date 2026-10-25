@@ -2,6 +2,7 @@
 
 namespace Boci\HetznerLaravel\Responses\Firewalls;
 
+use Boci\HetznerLaravel\Meta\MetaInformation;
 use Boci\HetznerLaravel\Responses\Response;
 
 /**
@@ -50,7 +51,7 @@ final class UpdateResponse extends Response
                 'labels' => $parameters['labels'] ?? [],
             ],
         ];
-        $meta = new \Boci\HetznerLaravel\Meta\MetaInformation;
+        $meta = new MetaInformation;
 
         return new self($data, $meta);
     }

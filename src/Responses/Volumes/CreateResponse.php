@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Boci\HetznerLaravel\Responses\Volumes;
 
+use Boci\HetznerLaravel\Meta\MetaInformation;
 use Boci\HetznerLaravel\Responses\Response;
+use Boci\HetznerLaravel\Responses\ServerActions\Action;
 
 /**
  * Create Volume Response
@@ -25,13 +27,13 @@ final class CreateResponse extends Response
     /**
      * Get the action from the response.
      */
-    public function action(): ?\Boci\HetznerLaravel\Responses\ServerActions\Action
+    public function action(): ?Action
     {
         if (! isset($this->data['action'])) {
             return null;
         }
 
-        return new \Boci\HetznerLaravel\Responses\ServerActions\Action($this->data['action']);
+        return new Action($this->data['action']);
     }
 
     /**
@@ -82,7 +84,7 @@ final class CreateResponse extends Response
             ],
         ];
 
-        $meta = new \Boci\HetznerLaravel\Meta\MetaInformation;
+        $meta = new MetaInformation;
 
         return new self($data, $meta);
     }

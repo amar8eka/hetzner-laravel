@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Boci\HetznerLaravel\Responses\Billing;
 
+use Boci\HetznerLaravel\Meta\MetaInformation;
 use Boci\HetznerLaravel\Responses\Response;
 
 /**
@@ -146,7 +147,7 @@ final class ListPricingResponse extends Response
             ],
         ];
 
-        $meta = new \Boci\HetznerLaravel\Meta\MetaInformation;
+        $meta = new MetaInformation;
 
         return new self($data, $meta);
     }

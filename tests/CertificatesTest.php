@@ -10,6 +10,7 @@ use Boci\HetznerLaravel\Responses\Certificates\DeleteResponse;
 use Boci\HetznerLaravel\Responses\Certificates\ListResponse;
 use Boci\HetznerLaravel\Responses\Certificates\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\Certificates\UpdateResponse;
+use Boci\HetznerLaravel\Testing\CertificatesFake;
 use Boci\HetznerLaravel\Testing\TestCase;
 use GuzzleHttp\Psr7\Response;
 
@@ -510,7 +511,7 @@ final class CertificatesTest extends TestCase
         $responses = [];
         $requests = [];
 
-        $certificatesFake = new \Boci\HetznerLaravel\Testing\CertificatesFake($responses, $requests);
+        $certificatesFake = new CertificatesFake($responses, $requests);
 
         // Test various certificate operations
         $certificatesFake->list();

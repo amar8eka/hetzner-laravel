@@ -10,13 +10,16 @@ use Boci\HetznerLaravel\Responses\LoadBalancers\CreateResponse;
 use Boci\HetznerLaravel\Responses\LoadBalancers\DeleteResponse;
 use Boci\HetznerLaravel\Responses\LoadBalancers\ListResponse;
 use Boci\HetznerLaravel\Responses\LoadBalancers\LoadBalancer;
+use Boci\HetznerLaravel\Responses\LoadBalancers\LoadBalancerMetrics;
 use Boci\HetznerLaravel\Responses\LoadBalancers\MetricsResponse;
 use Boci\HetznerLaravel\Responses\LoadBalancers\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\LoadBalancers\UpdateResponse;
+use Boci\HetznerLaravel\Responses\ServerActions\Action;
 use Boci\HetznerLaravel\Testing\TestCase;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Load Balancers Test Suite
@@ -229,7 +232,7 @@ final class LoadBalancersTest extends TestCase
 
         $this->assertInstanceOf(CreateResponse::class, $response);
         $this->assertInstanceOf(LoadBalancer::class, $response->loadBalancer());
-        $this->assertInstanceOf(\Boci\HetznerLaravel\Responses\ServerActions\Action::class, $response->action());
+        $this->assertInstanceOf(Action::class, $response->action());
 
         $loadBalancer = $response->loadBalancer();
         $this->assertEquals(1, $loadBalancer->id());
@@ -308,7 +311,7 @@ final class LoadBalancersTest extends TestCase
         $response = $client->loadBalancers()->delete($loadBalancerId);
 
         $this->assertInstanceOf(DeleteResponse::class, $response);
-        $this->assertInstanceOf(\Boci\HetznerLaravel\Responses\ServerActions\Action::class, $response->action());
+        $this->assertInstanceOf(Action::class, $response->action());
 
         $action = $response->action();
         $this->assertEquals(1, $action->id());
@@ -337,7 +340,7 @@ final class LoadBalancersTest extends TestCase
         $response = $client->loadBalancers()->metrics($loadBalancerId, $parameters);
 
         $this->assertInstanceOf(MetricsResponse::class, $response);
-        $this->assertInstanceOf(\Boci\HetznerLaravel\Responses\LoadBalancers\LoadBalancerMetrics::class, $response->metrics());
+        $this->assertInstanceOf(LoadBalancerMetrics::class, $response->metrics());
 
         $metrics = $response->metrics();
         $this->assertIsArray($metrics->toArray());
@@ -564,7 +567,7 @@ final class LoadBalancersTest extends TestCase
         $loadBalancersFake->list();
 
         // Now it should fail
-        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('Requests were sent to load_balancers.');
         $loadBalancersFake->assertNotSent();
     }

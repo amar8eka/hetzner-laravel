@@ -3,8 +3,14 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\DnsZoneActions\ChangeDefaultTtlRequest;
+use Boci\HetznerLaravel\Requests\DnsZoneActions\ChangeNameserversRequest;
+use Boci\HetznerLaravel\Requests\DnsZoneActions\ChangeProtectionRequest;
+use Boci\HetznerLaravel\Requests\DnsZoneActions\GetActionRequest;
+use Boci\HetznerLaravel\Requests\DnsZoneActions\ListActionsRequest;
 use Boci\HetznerLaravel\Responses\DnsZoneActions\ActionResponse;
 use Boci\HetznerLaravel\Responses\DnsZoneActions\ListActionsResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -51,7 +57,7 @@ final class DnsZoneActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListActionsResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsZoneActions\ListActionsRequest($zoneIdOrName, $parameters));
+            return ListActionsResponse::from($response, new ListActionsRequest($zoneIdOrName, $parameters));
         }
 
         return ListActionsResponse::fake(array_merge(['zoneIdOrName' => $zoneIdOrName], $parameters));
@@ -80,7 +86,7 @@ final class DnsZoneActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsZoneActions\GetActionRequest($zoneIdOrName, $actionId));
+            return ActionResponse::from($response, new GetActionRequest($zoneIdOrName, $actionId));
         }
 
         return ActionResponse::fake(['zoneIdOrName' => $zoneIdOrName, 'actionId' => $actionId]);
@@ -109,7 +115,7 @@ final class DnsZoneActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsZoneActions\ChangeNameserversRequest($zoneIdOrName, $parameters));
+            return ActionResponse::from($response, new ChangeNameserversRequest($zoneIdOrName, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['zoneIdOrName' => $zoneIdOrName, 'command' => 'change_nameservers'], $parameters));
@@ -138,7 +144,7 @@ final class DnsZoneActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsZoneActions\ChangeProtectionRequest($zoneIdOrName, $parameters));
+            return ActionResponse::from($response, new ChangeProtectionRequest($zoneIdOrName, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['zoneIdOrName' => $zoneIdOrName, 'command' => 'change_protection'], $parameters));
@@ -167,7 +173,7 @@ final class DnsZoneActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsZoneActions\ChangeDefaultTtlRequest($zoneIdOrName, $parameters));
+            return ActionResponse::from($response, new ChangeDefaultTtlRequest($zoneIdOrName, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['zoneIdOrName' => $zoneIdOrName, 'command' => 'change_default_ttl'], $parameters));
@@ -185,7 +191,7 @@ final class DnsZoneActionsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to dns_zone_actions.');
+            throw new AssertionFailedError('No requests were sent to dns_zone_actions.');
         }
     }
 
@@ -197,7 +203,7 @@ final class DnsZoneActionsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'dns_zone_actions');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to dns_zone_actions.');
+            throw new AssertionFailedError('Requests were sent to dns_zone_actions.');
         }
     }
 }

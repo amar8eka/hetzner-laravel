@@ -16,6 +16,11 @@
 - 🔧 **Laravel Integration**: Seamless Laravel service provider and facade
 - 🌐 **Complete API Coverage**: All Hetzner Cloud API endpoints implemented
 
+## Requirements
+
+- PHP 8.2 or higher (PHP 8.3 or higher for Laravel 13)
+- Laravel 12 or 13
+
 ## Installation
 
 You can install the package via composer:
@@ -38,6 +43,44 @@ Add your Hetzner API token to your `.env` file:
 HETZNER_TOKEN=your-hetzner-api-token-here
 ```
 
+### Multiple Projects
+
+Every Hetzner Cloud API token belongs to exactly one project. To manage more than one project, add an entry per project to `config/hetzner-laravel.php`:
+
+```php
+'default' => env('HETZNER_PROJECT', 'default'),
+
+'projects' => [
+    'default' => [
+        'token' => env('HETZNER_TOKEN'),
+    ],
+
+    'staging' => [
+        'token' => env('HETZNER_STAGING_TOKEN'),
+    ],
+],
+```
+
+```php
+use Boci\HetznerLaravel\Facades\HetznerLaravel;
+
+// Default project
+$servers = HetznerLaravel::servers()->list();
+
+// A configured project
+$servers = HetznerLaravel::project('staging')->servers()->list();
+
+// A token that is only known at runtime, e.g. stored per team in the database
+$servers = HetznerLaravel::withToken($team->hetzner_token)->servers()->list();
+
+// Change the default project, e.g. in a middleware
+HetznerLaravel::setDefaultProject('staging');
+```
+
+Clients for configured projects are created once and reused. `withToken()` always returns a new client, so runtime tokens are never shared. An unknown project or a project without a token throws an `InvalidArgumentException`.
+
+> Configuration files published before 1.1.0 only have a `token` key. They keep working, and the token is used for the default project.
+
 ## Usage
 
 ### Basic Usage
@@ -52,7 +95,7 @@ $client = Client::factory()
 // Create a server
 $response = $client->servers()->create([
     'name' => 'my-server',
-    'server_type' => 'cpx11',
+    'server_type' => 'cpx22',
     'image' => 'ubuntu-24.04',
     'location' => 'nbg1',
 ]);
@@ -82,6 +125,7 @@ foreach ($servers->servers() as $server) {
 // Get server details
 $server = HetznerLaravel::servers()->retrieve('12345');
 echo "Server IP: " . $server->server()->publicNet()['ipv4']['ip'];
+echo "Location: " . $server->server()->location()['name'];
 
 // Delete a server
 $action = HetznerLaravel::servers()->delete('12345');
@@ -257,13 +301,13 @@ use Boci\HetznerLaravel\Responses\Servers\CreateResponse;
 $client = new ClientFake([
     CreateResponse::fake([
         'name' => 'test-server',
-        'server_type' => 'cpx11',
+        'server_type' => 'cpx22',
     ]),
 ]);
 
 $response = $client->servers()->create([
     'name' => 'test-server',
-    'server_type' => 'cpx11',
+    'server_type' => 'cpx22',
     'image' => 'ubuntu-24.04',
     'location' => 'nbg1',
 ]);
@@ -325,7 +369,7 @@ class ServerController
     {
         $response = $this->hetznerClient->servers()->create([
             'name' => 'my-server',
-            'server_type' => 'cpx11',
+            'server_type' => 'cpx22',
             'image' => 'ubuntu-24.04',
             'location' => 'nbg1',
         ]);
@@ -408,7 +452,7 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 ## Quick Reference
 
 ### 🚀 Actions
-- `list()` - Get multiple actions
+- `list(['id' => [1, 2]])` - Get multiple actions by ID (listing all actions without `id` is no longer supported by Hetzner)
 - `retrieve(string $actionId)` - Get an action
 
 ### 🔐 Security
@@ -437,6 +481,15 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 - `import(array $parameters)` - Import zone file
 - `actions()` - Access zone actions
 - `rrsets()` - Access DNS records
+
+#### DNS Records (`dnsZones()->rrsets()`)
+- `list(string $zoneIdOrName)` - List records
+- `create(string $zoneIdOrName, array $parameters)` - Create a record
+- `retrieve(string $zoneIdOrName, string $rrName, string $rrType)` - Get a record
+- `update(...)` / `delete(...)` - Update or delete a record
+- `setRecords(...)` / `addRecords(...)` / `removeRecords(...)` - Change the values of a record
+- `updateRecords(...)` - Update the comments of existing values
+- `changeTtl(...)` / `changeProtection(...)` - Change the TTL or protection
 
 ### 📍 Locations
 - `list()` - List locations
@@ -516,6 +569,7 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 - `retrieve(string $networkId)` - Get a network
 - `update(string $networkId, array $parameters)` - Update a network
 - `delete(string $networkId)` - Delete a network
+- `members(string $networkId, array $parameters = [])` - List the servers and load balancers attached to a network
 - `actions()` - Access network actions
 
 ### 💰 Billing

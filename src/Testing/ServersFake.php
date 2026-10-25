@@ -3,12 +3,19 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\Servers\CreateRequest;
+use Boci\HetznerLaravel\Requests\Servers\DeleteRequest;
+use Boci\HetznerLaravel\Requests\Servers\ListRequest;
+use Boci\HetznerLaravel\Requests\Servers\MetricsRequest;
+use Boci\HetznerLaravel\Requests\Servers\RetrieveRequest;
+use Boci\HetznerLaravel\Requests\Servers\UpdateRequest;
 use Boci\HetznerLaravel\Responses\Servers\CreateResponse;
 use Boci\HetznerLaravel\Responses\Servers\DeleteResponse;
 use Boci\HetznerLaravel\Responses\Servers\ListResponse;
 use Boci\HetznerLaravel\Responses\Servers\MetricsResponse;
 use Boci\HetznerLaravel\Responses\Servers\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\Servers\UpdateResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -54,7 +61,7 @@ final class ServersFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return CreateResponse::from($response, new \Boci\HetznerLaravel\Requests\Servers\CreateRequest($parameters));
+            return CreateResponse::from($response, new CreateRequest($parameters));
         }
 
         return CreateResponse::fake($parameters);
@@ -82,7 +89,7 @@ final class ServersFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListResponse::from($response, new \Boci\HetznerLaravel\Requests\Servers\ListRequest($parameters));
+            return ListResponse::from($response, new ListRequest($parameters));
         }
 
         return ListResponse::fake($parameters);
@@ -110,7 +117,7 @@ final class ServersFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return RetrieveResponse::from($response, new \Boci\HetznerLaravel\Requests\Servers\RetrieveRequest($serverId));
+            return RetrieveResponse::from($response, new RetrieveRequest($serverId));
         }
 
         return RetrieveResponse::fake(['serverId' => $serverId]);
@@ -138,7 +145,7 @@ final class ServersFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return DeleteResponse::from($response, new \Boci\HetznerLaravel\Requests\Servers\DeleteRequest($serverId));
+            return DeleteResponse::from($response, new DeleteRequest($serverId));
         }
 
         return DeleteResponse::fake(['serverId' => $serverId]);
@@ -167,7 +174,7 @@ final class ServersFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return UpdateResponse::from($response, new \Boci\HetznerLaravel\Requests\Servers\UpdateRequest($serverId, $parameters));
+            return UpdateResponse::from($response, new UpdateRequest($serverId, $parameters));
         }
 
         return UpdateResponse::fake(array_merge(['serverId' => $serverId], $parameters));
@@ -196,7 +203,7 @@ final class ServersFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return MetricsResponse::from($response, new \Boci\HetznerLaravel\Requests\Servers\MetricsRequest($serverId, $parameters));
+            return MetricsResponse::from($response, new MetricsRequest($serverId, $parameters));
         }
 
         return MetricsResponse::fake(array_merge(['serverId' => $serverId], $parameters));
@@ -205,9 +212,9 @@ final class ServersFake implements ResourceContract
     /**
      * Get the server actions resource (fake implementation).
      */
-    public function actions(): \Boci\HetznerLaravel\Testing\ServerActionsFake
+    public function actions(): ServerActionsFake
     {
-        return new \Boci\HetznerLaravel\Testing\ServerActionsFake($this->responses, $this->requests);
+        return new ServerActionsFake($this->responses, $this->requests);
     }
 
     /**
@@ -222,7 +229,7 @@ final class ServersFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to servers.');
+            throw new AssertionFailedError('No requests were sent to servers.');
         }
     }
 
@@ -234,7 +241,7 @@ final class ServersFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'servers');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to servers.');
+            throw new AssertionFailedError('Requests were sent to servers.');
         }
     }
 }

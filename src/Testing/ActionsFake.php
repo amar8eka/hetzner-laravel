@@ -3,8 +3,11 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\Actions\GetActionRequest;
+use Boci\HetznerLaravel\Requests\Actions\ListActionsRequest;
 use Boci\HetznerLaravel\Responses\Actions\GetActionResponse;
 use Boci\HetznerLaravel\Responses\Actions\ListActionsResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -50,7 +53,7 @@ final class ActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListActionsResponse::from($response, new \Boci\HetznerLaravel\Requests\Actions\ListActionsRequest($parameters));
+            return ListActionsResponse::from($response, new ListActionsRequest($parameters));
         }
 
         return ListActionsResponse::fake($parameters);
@@ -78,7 +81,7 @@ final class ActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return GetActionResponse::from($response, new \Boci\HetznerLaravel\Requests\Actions\GetActionRequest($actionId));
+            return GetActionResponse::from($response, new GetActionRequest($actionId));
         }
 
         return GetActionResponse::fake(['actionId' => $actionId]);
@@ -96,7 +99,7 @@ final class ActionsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to actions.');
+            throw new AssertionFailedError('No requests were sent to actions.');
         }
     }
 
@@ -108,7 +111,7 @@ final class ActionsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'actions');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to actions.');
+            throw new AssertionFailedError('Requests were sent to actions.');
         }
     }
 }

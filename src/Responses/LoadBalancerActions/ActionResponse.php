@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Boci\HetznerLaravel\Responses\LoadBalancerActions;
 
+use Boci\HetznerLaravel\Meta\MetaInformation;
 use Boci\HetznerLaravel\Responses\Response;
 
 /**
@@ -50,7 +51,7 @@ final class ActionResponse extends Response
                 'error' => null,
             ],
         ];
-        $meta = new \Boci\HetznerLaravel\Meta\MetaInformation;
+        $meta = new MetaInformation;
 
         return new self($data, $meta);
     }

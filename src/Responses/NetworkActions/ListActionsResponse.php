@@ -2,6 +2,7 @@
 
 namespace Boci\HetznerLaravel\Responses\NetworkActions;
 
+use Boci\HetznerLaravel\Meta\MetaInformation;
 use Boci\HetznerLaravel\Responses\Response;
 
 /**
@@ -64,7 +65,7 @@ final class ListActionsResponse extends Response
             ],
         ];
 
-        $meta = new \Boci\HetznerLaravel\Meta\MetaInformation;
+        $meta = new MetaInformation;
 
         return new self($data, $meta);
     }

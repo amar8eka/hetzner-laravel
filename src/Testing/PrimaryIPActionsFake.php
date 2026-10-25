@@ -3,8 +3,17 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\PrimaryIPActions\AssignRequest;
+use Boci\HetznerLaravel\Requests\PrimaryIPActions\ChangeProtectionRequest;
+use Boci\HetznerLaravel\Requests\PrimaryIPActions\ChangeReverseDnsRequest;
+use Boci\HetznerLaravel\Requests\PrimaryIPActions\GetActionByIdRequest;
+use Boci\HetznerLaravel\Requests\PrimaryIPActions\GetActionRequest;
+use Boci\HetznerLaravel\Requests\PrimaryIPActions\ListActionsRequest;
+use Boci\HetznerLaravel\Requests\PrimaryIPActions\ListAllActionsRequest;
+use Boci\HetznerLaravel\Requests\PrimaryIPActions\UnassignRequest;
 use Boci\HetznerLaravel\Responses\PrimaryIPActions\ActionResponse;
 use Boci\HetznerLaravel\Responses\PrimaryIPActions\ListActionsResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -50,7 +59,7 @@ final class PrimaryIPActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListActionsResponse::from($response, new \Boci\HetznerLaravel\Requests\PrimaryIPActions\ListAllActionsRequest($parameters));
+            return ListActionsResponse::from($response, new ListAllActionsRequest($parameters));
         }
 
         return ListActionsResponse::fake($parameters);
@@ -79,7 +88,7 @@ final class PrimaryIPActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListActionsResponse::from($response, new \Boci\HetznerLaravel\Requests\PrimaryIPActions\ListActionsRequest($primaryIpId, $parameters));
+            return ListActionsResponse::from($response, new ListActionsRequest($primaryIpId, $parameters));
         }
 
         return ListActionsResponse::fake(array_merge(['primaryIpId' => $primaryIpId], $parameters));
@@ -107,7 +116,7 @@ final class PrimaryIPActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\PrimaryIPActions\GetActionByIdRequest($actionId));
+            return ActionResponse::from($response, new GetActionByIdRequest($actionId));
         }
 
         return ActionResponse::fake(['actionId' => $actionId]);
@@ -136,7 +145,7 @@ final class PrimaryIPActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\PrimaryIPActions\GetActionRequest($primaryIpId, $actionId));
+            return ActionResponse::from($response, new GetActionRequest($primaryIpId, $actionId));
         }
 
         return ActionResponse::fake(['primaryIpId' => $primaryIpId, 'actionId' => $actionId]);
@@ -165,7 +174,7 @@ final class PrimaryIPActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\PrimaryIPActions\AssignRequest($primaryIpId, $parameters));
+            return ActionResponse::from($response, new AssignRequest($primaryIpId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['primaryIpId' => $primaryIpId, 'command' => 'assign_primary_ip'], $parameters));
@@ -194,7 +203,7 @@ final class PrimaryIPActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\PrimaryIPActions\ChangeReverseDnsRequest($primaryIpId, $parameters));
+            return ActionResponse::from($response, new ChangeReverseDnsRequest($primaryIpId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['primaryIpId' => $primaryIpId, 'command' => 'change_reverse_dns'], $parameters));
@@ -223,7 +232,7 @@ final class PrimaryIPActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\PrimaryIPActions\ChangeProtectionRequest($primaryIpId, $parameters));
+            return ActionResponse::from($response, new ChangeProtectionRequest($primaryIpId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['primaryIpId' => $primaryIpId, 'command' => 'change_protection'], $parameters));
@@ -251,7 +260,7 @@ final class PrimaryIPActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\PrimaryIPActions\UnassignRequest($primaryIpId));
+            return ActionResponse::from($response, new UnassignRequest($primaryIpId));
         }
 
         return ActionResponse::fake(['primaryIpId' => $primaryIpId, 'command' => 'unassign_primary_ip']);
@@ -269,7 +278,7 @@ final class PrimaryIPActionsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to primary_ip_actions.');
+            throw new AssertionFailedError('No requests were sent to primary_ip_actions.');
         }
     }
 
@@ -281,7 +290,7 @@ final class PrimaryIPActionsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'primary_ip_actions');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to primary_ip_actions.');
+            throw new AssertionFailedError('Requests were sent to primary_ip_actions.');
         }
     }
 }

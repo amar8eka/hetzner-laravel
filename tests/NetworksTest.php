@@ -4,17 +4,24 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Boci\HetznerLaravel\Resources\Networks;
 use Boci\HetznerLaravel\Responses\NetworkActions\ActionResponse;
 use Boci\HetznerLaravel\Responses\NetworkActions\ListActionsResponse;
 use Boci\HetznerLaravel\Responses\Networks\CreateResponse;
 use Boci\HetznerLaravel\Responses\Networks\DeleteResponse;
 use Boci\HetznerLaravel\Responses\Networks\ListResponse;
+use Boci\HetznerLaravel\Responses\Networks\MembersResponse;
 use Boci\HetznerLaravel\Responses\Networks\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\Networks\UpdateResponse;
 use Boci\HetznerLaravel\Testing\TestCase;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Networks Test Suite
@@ -24,6 +31,48 @@ use GuzzleHttp\Psr7\Response;
  */
 final class NetworksTest extends TestCase
 {
+    /**
+     * Test listing the members of a network with fake data
+     */
+    public function test_can_list_network_members_with_fake_data(): void
+    {
+        $requests = [];
+        $responses = [];
+        $client = $this->fakeClient($responses, $requests);
+
+        $response = $client->networks()->members('123', ['type' => 'server']);
+
+        $this->assertInstanceOf(MembersResponse::class, $response);
+        $this->assertCount(2, $response->members());
+        $this->assertEquals('server', $response->members()[0]['type']);
+        $this->assertEquals('10.0.1.0/24', $response->members()[0]['subnet']);
+        $this->assertEquals(2, $response->pagination()['total_entries']);
+
+        $this->assertRequestWasMade($requests, 'networks', 'members', function ($request) {
+            return $request['parameters']['networkId'] === '123' && $request['parameters']['type'] === 'server';
+        });
+    }
+
+    /**
+     * Test that repeated network member filters are sent as repeated query keys
+     */
+    public function test_network_members_sends_repeated_filters(): void
+    {
+        $history = [];
+        $stack = HandlerStack::create(new MockHandler([
+            new Response(200, [], (string) json_encode(['members' => [], 'meta' => ['pagination' => ['total_entries' => 0]]])),
+        ]));
+        $stack->push(Middleware::history($history));
+
+        $networks = new Networks(new Client(['handler' => $stack]));
+
+        $response = $networks->members('123', ['type' => ['server', 'load_balancer'], 'status' => 'ok']);
+
+        $this->assertSame([], $response->members());
+        $this->assertSame('/v1/networks/123/members', $history[0]['request']->getUri()->getPath());
+        $this->assertSame('type=server&type=load_balancer&status=ok', $history[0]['request']->getUri()->getQuery());
+    }
+
     /**
      * Test listing networks with fake data
      */
@@ -586,7 +635,7 @@ final class NetworksTest extends TestCase
         $networksFake->list();
 
         // Now it should fail
-        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('Requests were sent to networks.');
         $networksFake->assertNotSent();
     }

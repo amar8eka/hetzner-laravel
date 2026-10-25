@@ -17,6 +17,7 @@ use Boci\HetznerLaravel\Testing\TestCase;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Volumes Test Suite
@@ -603,7 +604,7 @@ final class VolumesTest extends TestCase
         $volumesFake->list();
 
         // Now it should fail
-        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('Requests were sent to volumes.');
         $volumesFake->assertNotSent();
     }

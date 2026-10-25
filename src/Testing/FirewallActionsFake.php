@@ -3,8 +3,14 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\FirewallActions\ApplyToResourcesRequest;
+use Boci\HetznerLaravel\Requests\FirewallActions\GetActionRequest;
+use Boci\HetznerLaravel\Requests\FirewallActions\ListActionsRequest;
+use Boci\HetznerLaravel\Requests\FirewallActions\RemoveFromResourcesRequest;
+use Boci\HetznerLaravel\Requests\FirewallActions\SetRulesRequest;
 use Boci\HetznerLaravel\Responses\FirewallActions\ActionResponse;
 use Boci\HetznerLaravel\Responses\FirewallActions\ListActionsResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -51,7 +57,7 @@ final class FirewallActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListActionsResponse::from($response, new \Boci\HetznerLaravel\Requests\FirewallActions\ListActionsRequest($firewallId, $parameters));
+            return ListActionsResponse::from($response, new ListActionsRequest($firewallId, $parameters));
         }
 
         return ListActionsResponse::fake(array_merge(['firewallId' => $firewallId], $parameters));
@@ -80,7 +86,7 @@ final class FirewallActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\FirewallActions\GetActionRequest($firewallId, $actionId));
+            return ActionResponse::from($response, new GetActionRequest($firewallId, $actionId));
         }
 
         return ActionResponse::fake(['firewallId' => $firewallId, 'actionId' => $actionId]);
@@ -109,7 +115,7 @@ final class FirewallActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\FirewallActions\ApplyToResourcesRequest($firewallId, $parameters));
+            return ActionResponse::from($response, new ApplyToResourcesRequest($firewallId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['firewallId' => $firewallId, 'command' => 'apply_to_resources'], $parameters));
@@ -138,7 +144,7 @@ final class FirewallActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\FirewallActions\RemoveFromResourcesRequest($firewallId, $parameters));
+            return ActionResponse::from($response, new RemoveFromResourcesRequest($firewallId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['firewallId' => $firewallId, 'command' => 'remove_from_resources'], $parameters));
@@ -167,7 +173,7 @@ final class FirewallActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\FirewallActions\SetRulesRequest($firewallId, $parameters));
+            return ActionResponse::from($response, new SetRulesRequest($firewallId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['firewallId' => $firewallId, 'command' => 'set_rules'], $parameters));
@@ -185,7 +191,7 @@ final class FirewallActionsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to firewall_actions.');
+            throw new AssertionFailedError('No requests were sent to firewall_actions.');
         }
     }
 
@@ -197,7 +203,7 @@ final class FirewallActionsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'firewall_actions');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to firewall_actions.');
+            throw new AssertionFailedError('Requests were sent to firewall_actions.');
         }
     }
 }

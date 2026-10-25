@@ -3,11 +3,19 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\Networks\CreateRequest;
+use Boci\HetznerLaravel\Requests\Networks\DeleteRequest;
+use Boci\HetznerLaravel\Requests\Networks\ListRequest;
+use Boci\HetznerLaravel\Requests\Networks\MembersRequest;
+use Boci\HetznerLaravel\Requests\Networks\RetrieveRequest;
+use Boci\HetznerLaravel\Requests\Networks\UpdateRequest;
 use Boci\HetznerLaravel\Responses\Networks\CreateResponse;
 use Boci\HetznerLaravel\Responses\Networks\DeleteResponse;
 use Boci\HetznerLaravel\Responses\Networks\ListResponse;
+use Boci\HetznerLaravel\Responses\Networks\MembersResponse;
 use Boci\HetznerLaravel\Responses\Networks\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\Networks\UpdateResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -53,7 +61,7 @@ final class NetworksFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return CreateResponse::from($response, new \Boci\HetznerLaravel\Requests\Networks\CreateRequest($parameters));
+            return CreateResponse::from($response, new CreateRequest($parameters));
         }
 
         return CreateResponse::fake($parameters);
@@ -81,7 +89,7 @@ final class NetworksFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListResponse::from($response, new \Boci\HetznerLaravel\Requests\Networks\ListRequest($parameters));
+            return ListResponse::from($response, new ListRequest($parameters));
         }
 
         return ListResponse::fake($parameters);
@@ -109,10 +117,39 @@ final class NetworksFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return RetrieveResponse::from($response, new \Boci\HetznerLaravel\Requests\Networks\RetrieveRequest($networkId));
+            return RetrieveResponse::from($response, new RetrieveRequest($networkId));
         }
 
         return RetrieveResponse::fake(['networkId' => $networkId]);
+    }
+
+    /**
+     * List the members of a network (fake implementation).
+     *
+     * @param  string  $networkId  The ID of the network
+     * @param  array<string, mixed>  $parameters  Optional query parameters
+     *
+     * @throws Throwable When a mock exception is provided
+     */
+    public function members(string $networkId, array $parameters = []): MembersResponse
+    {
+        $this->requests[] = [
+            'resource' => 'networks',
+            'method' => 'members',
+            'parameters' => array_merge(['networkId' => $networkId], $parameters),
+        ];
+
+        $response = array_shift($this->responses);
+
+        if ($response instanceof Throwable) {
+            throw $response;
+        }
+
+        if ($response instanceof ResponseInterface) {
+            return MembersResponse::from($response, new MembersRequest($networkId, $parameters));
+        }
+
+        return MembersResponse::fake(['networkId' => $networkId]);
     }
 
     /**
@@ -138,7 +175,7 @@ final class NetworksFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return UpdateResponse::from($response, new \Boci\HetznerLaravel\Requests\Networks\UpdateRequest($networkId, $parameters));
+            return UpdateResponse::from($response, new UpdateRequest($networkId, $parameters));
         }
 
         return UpdateResponse::fake(array_merge(['networkId' => $networkId], $parameters));
@@ -166,7 +203,7 @@ final class NetworksFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return DeleteResponse::from($response, new \Boci\HetznerLaravel\Requests\Networks\DeleteRequest($networkId));
+            return DeleteResponse::from($response, new DeleteRequest($networkId));
         }
 
         return DeleteResponse::fake(['networkId' => $networkId]);
@@ -192,7 +229,7 @@ final class NetworksFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to networks.');
+            throw new AssertionFailedError('No requests were sent to networks.');
         }
     }
 
@@ -204,7 +241,7 @@ final class NetworksFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'networks');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to networks.');
+            throw new AssertionFailedError('Requests were sent to networks.');
         }
     }
 }

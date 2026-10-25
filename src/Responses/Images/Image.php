@@ -152,7 +152,19 @@ final class Image
     }
 
     /**
+     * Get the deprecation information, or null when it is not deprecated.
+     *
+     * @return array{announced: string, unavailable_after: string}|null
+     */
+    public function deprecation(): ?array
+    {
+        return $this->data['deprecation'] ?? null;
+    }
+
+    /**
      * Get when the image was deprecated.
+     *
+     * @deprecated The Hetzner Cloud API removes this field on 2 November 2026, use deprecation() instead.
      */
     public function deprecated(): ?string
     {

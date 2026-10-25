@@ -3,9 +3,34 @@
 namespace Boci\HetznerLaravel\Testing;
 
 use Boci\HetznerLaravel\Contracts\ResourceContract;
+use Boci\HetznerLaravel\Requests\ServerActions\AddToPlacementGroupRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\AttachIsoRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\AttachToNetworkRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\ChangeAliasIpsRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\ChangeProtectionRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\ChangeReverseDnsRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\ChangeServerTypeRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\CreateImageRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\DetachFromNetworkRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\DetachIsoRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\DisableBackupsRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\DisableRescueModeRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\EnableBackupsRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\EnableRescueModeRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\ListActionsRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\PowerOffRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\PowerOnRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\RebootRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\RebuildRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\RemoveFromPlacementGroupRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\RequestConsoleRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\ResetPasswordRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\ResetRequest;
+use Boci\HetznerLaravel\Requests\ServerActions\ShutdownRequest;
 use Boci\HetznerLaravel\Responses\ServerActions\ActionResponse;
 use Boci\HetznerLaravel\Responses\ServerActions\ConsoleResponse;
 use Boci\HetznerLaravel\Responses\ServerActions\ListActionsResponse;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -52,7 +77,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ListActionsResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\ListActionsRequest($serverId, $parameters));
+            return ListActionsResponse::from($response, new ListActionsRequest($serverId, $parameters));
         }
 
         return ListActionsResponse::fake(array_merge(['serverId' => $serverId], $parameters));
@@ -80,7 +105,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\PowerOnRequest($serverId));
+            return ActionResponse::from($response, new PowerOnRequest($serverId));
         }
 
         return ActionResponse::fake(['serverId' => $serverId]);
@@ -108,7 +133,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\PowerOffRequest($serverId));
+            return ActionResponse::from($response, new PowerOffRequest($serverId));
         }
 
         return ActionResponse::fake(['serverId' => $serverId]);
@@ -136,7 +161,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\RebootRequest($serverId));
+            return ActionResponse::from($response, new RebootRequest($serverId));
         }
 
         return ActionResponse::fake(['serverId' => $serverId]);
@@ -164,7 +189,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\ShutdownRequest($serverId));
+            return ActionResponse::from($response, new ShutdownRequest($serverId));
         }
 
         return ActionResponse::fake(['serverId' => $serverId]);
@@ -192,7 +217,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\ResetRequest($serverId));
+            return ActionResponse::from($response, new ResetRequest($serverId));
         }
 
         return ActionResponse::fake(['serverId' => $serverId]);
@@ -221,7 +246,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\ChangeProtectionRequest($serverId, $parameters));
+            return ActionResponse::from($response, new ChangeProtectionRequest($serverId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['serverId' => $serverId], $parameters));
@@ -250,7 +275,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\ChangeServerTypeRequest($serverId, $parameters));
+            return ActionResponse::from($response, new ChangeServerTypeRequest($serverId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['serverId' => $serverId], $parameters));
@@ -279,7 +304,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\RebuildRequest($serverId, $parameters));
+            return ActionResponse::from($response, new RebuildRequest($serverId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['serverId' => $serverId], $parameters));
@@ -308,7 +333,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\CreateImageRequest($serverId, $parameters));
+            return ActionResponse::from($response, new CreateImageRequest($serverId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['serverId' => $serverId], $parameters));
@@ -336,7 +361,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\ResetPasswordRequest($serverId));
+            return ActionResponse::from($response, new ResetPasswordRequest($serverId));
         }
 
         return ActionResponse::fake(['serverId' => $serverId]);
@@ -364,7 +389,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ConsoleResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\RequestConsoleRequest($serverId));
+            return ConsoleResponse::from($response, new RequestConsoleRequest($serverId));
         }
 
         return ConsoleResponse::fake(['serverId' => $serverId]);
@@ -393,7 +418,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\AttachToNetworkRequest($serverId, $parameters));
+            return ActionResponse::from($response, new AttachToNetworkRequest($serverId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['serverId' => $serverId], $parameters));
@@ -422,7 +447,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\DetachFromNetworkRequest($serverId, $parameters));
+            return ActionResponse::from($response, new DetachFromNetworkRequest($serverId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['serverId' => $serverId], $parameters));
@@ -451,7 +476,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\ChangeAliasIpsRequest($serverId, $parameters));
+            return ActionResponse::from($response, new ChangeAliasIpsRequest($serverId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['serverId' => $serverId], $parameters));
@@ -480,7 +505,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\AttachIsoRequest($serverId, $parameters));
+            return ActionResponse::from($response, new AttachIsoRequest($serverId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['serverId' => $serverId], $parameters));
@@ -508,7 +533,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\DetachIsoRequest($serverId));
+            return ActionResponse::from($response, new DetachIsoRequest($serverId));
         }
 
         return ActionResponse::fake(['serverId' => $serverId]);
@@ -537,7 +562,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\AddToPlacementGroupRequest($serverId, $parameters));
+            return ActionResponse::from($response, new AddToPlacementGroupRequest($serverId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['serverId' => $serverId], $parameters));
@@ -565,7 +590,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\RemoveFromPlacementGroupRequest($serverId));
+            return ActionResponse::from($response, new RemoveFromPlacementGroupRequest($serverId));
         }
 
         return ActionResponse::fake(['serverId' => $serverId]);
@@ -593,7 +618,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\EnableBackupsRequest($serverId));
+            return ActionResponse::from($response, new EnableBackupsRequest($serverId));
         }
 
         return ActionResponse::fake(['serverId' => $serverId]);
@@ -621,7 +646,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\DisableBackupsRequest($serverId));
+            return ActionResponse::from($response, new DisableBackupsRequest($serverId));
         }
 
         return ActionResponse::fake(['serverId' => $serverId]);
@@ -650,7 +675,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\EnableRescueModeRequest($serverId, $parameters));
+            return ActionResponse::from($response, new EnableRescueModeRequest($serverId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['serverId' => $serverId], $parameters));
@@ -678,7 +703,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\DisableRescueModeRequest($serverId));
+            return ActionResponse::from($response, new DisableRescueModeRequest($serverId));
         }
 
         return ActionResponse::fake(['serverId' => $serverId]);
@@ -707,7 +732,7 @@ final class ServerActionsFake implements ResourceContract
         }
 
         if ($response instanceof ResponseInterface) {
-            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\ServerActions\ChangeReverseDnsRequest($serverId, $parameters));
+            return ActionResponse::from($response, new ChangeReverseDnsRequest($serverId, $parameters));
         }
 
         return ActionResponse::fake(array_merge(['serverId' => $serverId], $parameters));
@@ -725,7 +750,7 @@ final class ServerActionsFake implements ResourceContract
         $sent = array_filter($sent, $callback);
 
         if (empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('No requests were sent to server_actions.');
+            throw new AssertionFailedError('No requests were sent to server_actions.');
         }
     }
 
@@ -737,7 +762,7 @@ final class ServerActionsFake implements ResourceContract
         $sent = array_filter($this->requests, fn (array $request) => $request['resource'] === 'server_actions');
 
         if (! empty($sent)) {
-            throw new \PHPUnit\Framework\AssertionFailedError('Requests were sent to server_actions.');
+            throw new AssertionFailedError('Requests were sent to server_actions.');
         }
     }
 }

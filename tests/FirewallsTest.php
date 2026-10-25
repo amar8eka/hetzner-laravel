@@ -12,6 +12,7 @@ use Boci\HetznerLaravel\Responses\Firewalls\Firewall;
 use Boci\HetznerLaravel\Responses\Firewalls\ListResponse;
 use Boci\HetznerLaravel\Responses\Firewalls\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\Firewalls\UpdateResponse;
+use Boci\HetznerLaravel\Testing\FirewallsFake;
 use Boci\HetznerLaravel\Testing\TestCase;
 use GuzzleHttp\Psr7\Response;
 
@@ -601,7 +602,7 @@ final class FirewallsTest extends TestCase
         $responses = [];
         $requests = [];
 
-        $firewallsFake = new \Boci\HetznerLaravel\Testing\FirewallsFake($responses, $requests);
+        $firewallsFake = new FirewallsFake($responses, $requests);
 
         // Test various firewall operations
         $firewallsFake->list();

@@ -92,6 +92,37 @@ final class ServerType
     }
 
     /**
+     * Get the category, e.g. regular_purpose, cost_optimized or general_purpose.
+     */
+    public function category(): ?string
+    {
+        return $this->data['category'] ?? null;
+    }
+
+    /**
+     * Get the locations this server type is offered in, with their
+     * availability, recommendation and deprecation per location.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function locations(): array
+    {
+        return $this->data['locations'] ?? [];
+    }
+
+    /**
+     * Get the deprecation information, or null when it is not deprecated.
+     *
+     * @deprecated Hetzner deprecates server types per location now, use locations() instead.
+     *
+     * @return array{announced: string, unavailable_after: string}|null
+     */
+    public function deprecation(): ?array
+    {
+        return $this->data['deprecation'] ?? null;
+    }
+
+    /**
      * Convert the server type to an array.
      *
      * @return array<string, mixed>
