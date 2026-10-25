@@ -79,7 +79,7 @@ HetznerLaravel::setDefaultProject('staging');
 
 Clients for configured projects are created once and reused. `withToken()` always returns a new client, so runtime tokens are never shared. An unknown project or a project without a token throws an `InvalidArgumentException`.
 
-> Configuration files published before 1.1.0 only have a `token` key. They keep working, and the token is used for the default project.
+> Configuration files published before 1.0.3 only have a `token` key. They keep working, and the token is used for the default project.
 
 ## Usage
 
