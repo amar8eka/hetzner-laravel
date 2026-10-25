@@ -16,6 +16,11 @@
 - 🔧 **Laravel Integration**: Seamless Laravel service provider and facade
 - 🌐 **Complete API Coverage**: All Hetzner Cloud API endpoints implemented
 
+## Requirements
+
+- PHP 8.2 or higher (PHP 8.3 or higher for Laravel 13)
+- Laravel 12 or 13
+
 ## Installation
 
 You can install the package via composer:
