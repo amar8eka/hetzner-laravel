@@ -13,6 +13,7 @@ use Boci\HetznerLaravel\Requests\DnsRrsets\GetRequest;
 use Boci\HetznerLaravel\Requests\DnsRrsets\ListRequest;
 use Boci\HetznerLaravel\Requests\DnsRrsets\RemoveRecordsRequest;
 use Boci\HetznerLaravel\Requests\DnsRrsets\SetRecordsRequest;
+use Boci\HetznerLaravel\Requests\DnsRrsets\UpdateRecordsRequest;
 use Boci\HetznerLaravel\Requests\DnsRrsets\UpdateRequest;
 use Boci\HetznerLaravel\Responses\DnsRrsets\ActionResponse;
 use Boci\HetznerLaravel\Responses\DnsRrsets\CreateResponse;
@@ -172,6 +173,22 @@ final class DnsRrsets
     public function addRecords(string $zoneIdOrName, string $rrName, string $rrType, array $parameters): ActionResponse
     {
         $request = new AddRecordsRequest($zoneIdOrName, $rrName, $rrType, $parameters);
+        $response = $this->httpClient->request($request->method(), $request->uri(), $request->options());
+
+        return ActionResponse::from($response, $request);
+    }
+
+    /**
+     * Update the records of an RRSet, e.g. their comments
+     *
+     * @param  string  $zoneIdOrName  The ID or name of the DNS zone
+     * @param  string  $rrName  The name of the RRSet
+     * @param  string  $rrType  The type of the RRSet
+     * @param  array<string, mixed>  $parameters  The records to update
+     */
+    public function updateRecords(string $zoneIdOrName, string $rrName, string $rrType, array $parameters): ActionResponse
+    {
+        $request = new UpdateRecordsRequest($zoneIdOrName, $rrName, $rrType, $parameters);
         $response = $this->httpClient->request($request->method(), $request->uri(), $request->options());
 
         return ActionResponse::from($response, $request);

@@ -95,7 +95,7 @@ $client = Client::factory()
 // Create a server
 $response = $client->servers()->create([
     'name' => 'my-server',
-    'server_type' => 'cpx11',
+    'server_type' => 'cpx22',
     'image' => 'ubuntu-24.04',
     'location' => 'nbg1',
 ]);
@@ -125,6 +125,7 @@ foreach ($servers->servers() as $server) {
 // Get server details
 $server = HetznerLaravel::servers()->retrieve('12345');
 echo "Server IP: " . $server->server()->publicNet()['ipv4']['ip'];
+echo "Location: " . $server->server()->location()['name'];
 
 // Delete a server
 $action = HetznerLaravel::servers()->delete('12345');
@@ -300,13 +301,13 @@ use Boci\HetznerLaravel\Responses\Servers\CreateResponse;
 $client = new ClientFake([
     CreateResponse::fake([
         'name' => 'test-server',
-        'server_type' => 'cpx11',
+        'server_type' => 'cpx22',
     ]),
 ]);
 
 $response = $client->servers()->create([
     'name' => 'test-server',
-    'server_type' => 'cpx11',
+    'server_type' => 'cpx22',
     'image' => 'ubuntu-24.04',
     'location' => 'nbg1',
 ]);
@@ -368,7 +369,7 @@ class ServerController
     {
         $response = $this->hetznerClient->servers()->create([
             'name' => 'my-server',
-            'server_type' => 'cpx11',
+            'server_type' => 'cpx22',
             'image' => 'ubuntu-24.04',
             'location' => 'nbg1',
         ]);
@@ -451,7 +452,7 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 ## Quick Reference
 
 ### 🚀 Actions
-- `list()` - Get multiple actions
+- `list(['id' => [1, 2]])` - Get multiple actions by ID (listing all actions without `id` is no longer supported by Hetzner)
 - `retrieve(string $actionId)` - Get an action
 
 ### 🔐 Security
@@ -480,6 +481,15 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 - `import(array $parameters)` - Import zone file
 - `actions()` - Access zone actions
 - `rrsets()` - Access DNS records
+
+#### DNS Records (`dnsZones()->rrsets()`)
+- `list(string $zoneIdOrName)` - List records
+- `create(string $zoneIdOrName, array $parameters)` - Create a record
+- `retrieve(string $zoneIdOrName, string $rrName, string $rrType)` - Get a record
+- `update(...)` / `delete(...)` - Update or delete a record
+- `setRecords(...)` / `addRecords(...)` / `removeRecords(...)` - Change the values of a record
+- `updateRecords(...)` - Update the comments of existing values
+- `changeTtl(...)` / `changeProtection(...)` - Change the TTL or protection
 
 ### 📍 Locations
 - `list()` - List locations
@@ -559,6 +569,7 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 - `retrieve(string $networkId)` - Get a network
 - `update(string $networkId, array $parameters)` - Update a network
 - `delete(string $networkId)` - Delete a network
+- `members(string $networkId, array $parameters = [])` - List the servers and load balancers attached to a network
 - `actions()` - Access network actions
 
 ### 💰 Billing

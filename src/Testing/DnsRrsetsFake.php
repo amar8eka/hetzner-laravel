@@ -306,6 +306,37 @@ final class DnsRrsetsFake implements ResourceContract
     }
 
     /**
+     * Update the records of an RRSet, e.g. their comments (fake implementation).
+     *
+     * @param  string  $zoneIdOrName  The ID or name of the DNS zone
+     * @param  string  $rrName  The name of the RRSet
+     * @param  string  $rrType  The type of the RRSet
+     * @param  array<string, mixed>  $parameters  The records parameters
+     *
+     * @throws Throwable When a mock exception is provided
+     */
+    public function updateRecords(string $zoneIdOrName, string $rrName, string $rrType, array $parameters): ActionResponse
+    {
+        $this->requests[] = [
+            'resource' => 'dns_rrsets',
+            'method' => 'update_records',
+            'parameters' => array_merge(['zoneIdOrName' => $zoneIdOrName, 'rrName' => $rrName, 'rrType' => $rrType], $parameters),
+        ];
+
+        $response = array_shift($this->responses);
+
+        if ($response instanceof Throwable) {
+            throw $response;
+        }
+
+        if ($response instanceof ResponseInterface) {
+            return ActionResponse::from($response, new \Boci\HetznerLaravel\Requests\DnsRrsets\UpdateRecordsRequest($zoneIdOrName, $rrName, $rrType, $parameters));
+        }
+
+        return ActionResponse::fake(array_merge(['zoneIdOrName' => $zoneIdOrName, 'command' => 'update_rrset_records'], $parameters));
+    }
+
+    /**
      * Remove records from an RRSet (fake implementation).
      *
      * @param  string  $zoneIdOrName  The ID or name of the DNS zone

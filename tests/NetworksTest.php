@@ -9,6 +9,7 @@ use Boci\HetznerLaravel\Responses\NetworkActions\ListActionsResponse;
 use Boci\HetznerLaravel\Responses\Networks\CreateResponse;
 use Boci\HetznerLaravel\Responses\Networks\DeleteResponse;
 use Boci\HetznerLaravel\Responses\Networks\ListResponse;
+use Boci\HetznerLaravel\Responses\Networks\MembersResponse;
 use Boci\HetznerLaravel\Responses\Networks\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\Networks\UpdateResponse;
 use Boci\HetznerLaravel\Testing\TestCase;
@@ -24,6 +25,48 @@ use GuzzleHttp\Psr7\Response;
  */
 final class NetworksTest extends TestCase
 {
+    /**
+     * Test listing the members of a network with fake data
+     */
+    public function test_can_list_network_members_with_fake_data(): void
+    {
+        $requests = [];
+        $responses = [];
+        $client = $this->fakeClient($responses, $requests);
+
+        $response = $client->networks()->members('123', ['type' => 'server']);
+
+        $this->assertInstanceOf(MembersResponse::class, $response);
+        $this->assertCount(2, $response->members());
+        $this->assertEquals('server', $response->members()[0]['type']);
+        $this->assertEquals('10.0.1.0/24', $response->members()[0]['subnet']);
+        $this->assertEquals(2, $response->pagination()['total_entries']);
+
+        $this->assertRequestWasMade($requests, 'networks', 'members', function ($request) {
+            return $request['parameters']['networkId'] === '123' && $request['parameters']['type'] === 'server';
+        });
+    }
+
+    /**
+     * Test that repeated network member filters are sent as repeated query keys
+     */
+    public function test_network_members_sends_repeated_filters(): void
+    {
+        $history = [];
+        $stack = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            new Response(200, [], (string) json_encode(['members' => [], 'meta' => ['pagination' => ['total_entries' => 0]]])),
+        ]));
+        $stack->push(\GuzzleHttp\Middleware::history($history));
+
+        $networks = new \Boci\HetznerLaravel\Resources\Networks(new \GuzzleHttp\Client(['handler' => $stack]));
+
+        $response = $networks->members('123', ['type' => ['server', 'load_balancer'], 'status' => 'ok']);
+
+        $this->assertSame([], $response->members());
+        $this->assertSame('/v1/networks/123/members', $history[0]['request']->getUri()->getPath());
+        $this->assertSame('type=server&type=load_balancer&status=ok', $history[0]['request']->getUri()->getQuery());
+    }
+
     /**
      * Test listing networks with fake data
      */

@@ -6,6 +6,7 @@ use Boci\HetznerLaravel\Contracts\ResourceContract;
 use Boci\HetznerLaravel\Responses\Networks\CreateResponse;
 use Boci\HetznerLaravel\Responses\Networks\DeleteResponse;
 use Boci\HetznerLaravel\Responses\Networks\ListResponse;
+use Boci\HetznerLaravel\Responses\Networks\MembersResponse;
 use Boci\HetznerLaravel\Responses\Networks\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\Networks\UpdateResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -113,6 +114,35 @@ final class NetworksFake implements ResourceContract
         }
 
         return RetrieveResponse::fake(['networkId' => $networkId]);
+    }
+
+    /**
+     * List the members of a network (fake implementation).
+     *
+     * @param  string  $networkId  The ID of the network
+     * @param  array<string, mixed>  $parameters  Optional query parameters
+     *
+     * @throws Throwable When a mock exception is provided
+     */
+    public function members(string $networkId, array $parameters = []): MembersResponse
+    {
+        $this->requests[] = [
+            'resource' => 'networks',
+            'method' => 'members',
+            'parameters' => array_merge(['networkId' => $networkId], $parameters),
+        ];
+
+        $response = array_shift($this->responses);
+
+        if ($response instanceof Throwable) {
+            throw $response;
+        }
+
+        if ($response instanceof ResponseInterface) {
+            return MembersResponse::from($response, new \Boci\HetznerLaravel\Requests\Networks\MembersRequest($networkId, $parameters));
+        }
+
+        return MembersResponse::fake(['networkId' => $networkId]);
     }
 
     /**

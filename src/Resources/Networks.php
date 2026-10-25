@@ -6,11 +6,13 @@ use Boci\HetznerLaravel\Contracts\ResourceContract;
 use Boci\HetznerLaravel\Requests\Networks\CreateRequest;
 use Boci\HetznerLaravel\Requests\Networks\DeleteRequest;
 use Boci\HetznerLaravel\Requests\Networks\ListRequest;
+use Boci\HetznerLaravel\Requests\Networks\MembersRequest;
 use Boci\HetznerLaravel\Requests\Networks\RetrieveRequest;
 use Boci\HetznerLaravel\Requests\Networks\UpdateRequest;
 use Boci\HetznerLaravel\Responses\Networks\CreateResponse;
 use Boci\HetznerLaravel\Responses\Networks\DeleteResponse;
 use Boci\HetznerLaravel\Responses\Networks\ListResponse;
+use Boci\HetznerLaravel\Responses\Networks\MembersResponse;
 use Boci\HetznerLaravel\Responses\Networks\RetrieveResponse;
 use Boci\HetznerLaravel\Responses\Networks\UpdateResponse;
 use GuzzleHttp\ClientInterface;
@@ -101,6 +103,21 @@ final class Networks implements ResourceContract
         $response = $this->httpClient->request($request->method(), $request->uri(), $request->options());
 
         return DeleteResponse::from($response, $request);
+    }
+
+    /**
+     * List the servers and load balancers attached to a network.
+     *
+     * @param  string  $networkId  The ID of the network
+     * @param  array<string, mixed>  $parameters  Optional query parameters (type, subnet, status, sort, page, per_page)
+     */
+    public function members(string $networkId, array $parameters = []): MembersResponse
+    {
+        $request = new MembersRequest($networkId, $parameters);
+
+        $response = $this->httpClient->request($request->method(), $request->uri(), $request->options());
+
+        return MembersResponse::from($response, $request);
     }
 
     /**

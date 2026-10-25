@@ -1298,6 +1298,38 @@ $TTL 3600
     }
 
     /**
+     * Test updating the comments of DNS RRSet records
+     */
+    public function test_can_update_dns_rrset_records(): void
+    {
+        $requests = [];
+        $responses = [];
+        $client = $this->fakeClient($responses, $requests);
+
+        $parameters = [
+            'records' => [
+                [
+                    'value' => '192.168.1.20',
+                    'comment' => 'Primary web server',
+                ],
+            ],
+        ];
+
+        $response = $client->dnsZones()->rrsets()->updateRecords('example.com', '@', 'A', $parameters);
+
+        $this->assertInstanceOf(RRSetActionResponse::class, $response);
+        $this->assertEquals('update_rrset_records', $response->action()->command());
+
+        $this->assertRequestWasMade($requests, 'dns_rrsets', 'update_records', function ($request) {
+            return $request['parameters']['records'][0]['comment'] === 'Primary web server';
+        });
+
+        $request = new \Boci\HetznerLaravel\Requests\DnsRrsets\UpdateRecordsRequest('example.com', '@', 'A', $parameters);
+        $this->assertSame('POST', $request->method());
+        $this->assertSame('/v1/zones/example.com/rrsets/@/A/actions/update_records', $request->uri());
+    }
+
+    /**
      * Test DNS RRSets - remove records
      */
     public function test_can_remove_dns_rrset_records(): void

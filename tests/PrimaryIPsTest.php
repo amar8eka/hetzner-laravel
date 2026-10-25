@@ -1297,6 +1297,7 @@ final class PrimaryIPsTest extends TestCase
 
         foreach ($primaryIps as $primaryIp) {
             $datacenter = $primaryIp->datacenter();
+            $this->assertNotNull($datacenter);
 
             // Test datacenter structure
             $this->assertIsInt($datacenter['id']);
