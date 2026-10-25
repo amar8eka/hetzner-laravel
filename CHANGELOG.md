@@ -2,7 +2,7 @@
 
 All notable changes to `hetzner-laravel` will be documented in this file
 
-## Unreleased
+## 1.0.3 - 2026-10-25
 
 - support Laravel 13
 - support multiple Hetzner projects, each with its own API token, via `HetznerLaravel::project('name')`
